@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SWP.FUGoodsExchangeManagement.API", "SWP.FUGoodsExchangeManagement.API\SWP.FUGoodsExchangeManagement.API.csproj", "{78E5A56E-DABA-4A5E-B395-E2F0A4495B2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SWP.FUGoodsExchangeManagement.Repository", "SWP.FUGoodsExchangeManagement.Repository\SWP.FUGoodsExchangeManagement.Repository.csproj", "{B028183E-0EA2-4A17-AB9F-6A752A25D55C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{78E5A56E-DABA-4A5E-B395-E2F0A4495B2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78E5A56E-DABA-4A5E-B395-E2F0A4495B2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78E5A56E-DABA-4A5E-B395-E2F0A4495B2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78E5A56E-DABA-4A5E-B395-E2F0A4495B2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B028183E-0EA2-4A17-AB9F-6A752A25D55C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B028183E-0EA2-4A17-AB9F-6A752A25D55C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B028183E-0EA2-4A17-AB9F-6A752A25D55C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B028183E-0EA2-4A17-AB9F-6A752A25D55C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {919B6AAB-DAAB-4E5B-A0B9-31D564CBF948}
+	EndGlobalSection
+EndGlobal
