@@ -20,8 +20,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.GenericRepository
             this.dbSet = context.Set<TEntity>();
         }
 
-        // Updated Get method with pagination
-        public virtual IEnumerable<TEntity> Get(
+        private IQueryable<TEntity> GetQueryable(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "",
@@ -56,33 +55,52 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.GenericRepository
                 query = query.Skip(validPageIndex * validPageSize).Take(validPageSize);
             }
 
-            return query.ToList();
+            return query;
         }
 
-        public virtual TEntity GetByID(int id)
+        public virtual async Task<IEnumerable<TEntity>> Get(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            string includeProperties = "",
+            int? pageIndex = null, // Optional parameter for pagination (page number)
+            int? pageSize = null)  // Optional parameter for pagination (number of records per page)
         {
-            return dbSet.Find(id);
+            var query = GetQueryable(filter, orderBy, includeProperties, pageIndex, pageSize);
+            return await query.ToListAsync();
         }
 
-        public virtual void Insert(TEntity entity)
+        public virtual async Task<TEntity> GetSingle(
+            Expression<Func<TEntity, bool>> filter = null,
+            string includeProperties = "")  // Optional parameter for pagination (number of records per page)
         {
-            dbSet.Add(entity);
+            var query = GetQueryable(filter, null, includeProperties, null, null);
+            return await query.SingleOrDefaultAsync();
         }
 
-        public virtual void Delete(object id)
+        public virtual async Task<TEntity> GetByID(int id)
         {
-            TEntity entityToDelete = dbSet.Find(id);
-            Delete(entityToDelete);
+            return await dbSet.FindAsync(id);
         }
 
-        public virtual void Delete(TEntity entityToDelete)
+        public virtual async Task Insert(TEntity entity)
         {
-            if (context.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                dbSet.Attach(entityToDelete);
-            }
-            dbSet.Remove(entityToDelete);
+            await dbSet.AddAsync(entity);
         }
+
+        //public virtual async Task Delete(object id)
+        //{
+        //    TEntity entityToDelete = await dbSet.FindAsync(id);
+        //    Delete(entityToDelete);
+        //}
+
+        //private void Delete(TEntity entityToDelete)
+        //{
+        //    if (context.Entry(entityToDelete).State == EntityState.Detached)
+        //    {
+        //        dbSet.Attach(entityToDelete);
+        //    }
+        //    dbSet.Remove(entityToDelete);
+        //}
 
         public virtual void Update(TEntity entityToUpdate)
         {
@@ -90,7 +108,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.GenericRepository
             context.Entry(entityToUpdate).State = EntityState.Modified;
         }
 
-        public virtual int Count(Expression<Func<TEntity, bool>> filter = null)
+        public virtual async Task<int> Count(Expression<Func<TEntity, bool>> filter = null)
         {
             IQueryable<TEntity> query = dbSet;
 
@@ -98,7 +116,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.GenericRepository
             {
                 query = query.Where(filter);
             }
-            return query.Count();
+            return await query.CountAsync();
         }
 
     }
