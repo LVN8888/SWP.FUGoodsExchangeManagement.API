@@ -9,17 +9,20 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.GenericRepository
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {
-        IEnumerable<TEntity> Get(
+        Task<IEnumerable<TEntity>> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "",
             int? pageIndex = null,
             int? pageSize = null);
+        Task<TEntity> GetSingle(
+            Expression<Func<TEntity, bool>> filter = null,
+            string includeProperties = "");
 
-        TEntity GetByID(int id);
-        void Insert(TEntity entity);
-        void Delete(object id);
+        Task<TEntity> GetByID(int id);
+        Task Insert(TEntity entity);
+        //Task Delete(object id);
         void Update(TEntity entityToUpdate);
-        int Count(Expression<Func<TEntity, bool>> filter = null);
+        Task<int> Count(Expression<Func<TEntity, bool>> filter = null);
     }
 }

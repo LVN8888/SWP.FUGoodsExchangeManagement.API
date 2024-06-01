@@ -6,12 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepository
+namespace SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        private readonly FugoodsExchangeManagementContext _dbContext;
-        public UserRepository(FugoodsExchangeManagementContext dbContext) : base(dbContext) 
+        private readonly FugoodsExchangeManagementContext _context;
+        public UserRepository(FugoodsExchangeManagementContext context) : base(context) 
         {
         }
     }
