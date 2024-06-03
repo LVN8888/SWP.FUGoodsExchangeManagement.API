@@ -19,9 +19,13 @@ public partial class User
 
     public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
 
+    public virtual ICollection<Otpcode> Otpcodes { get; set; } = new List<Otpcode>();
+
     public virtual ICollection<PostApply> PostApplies { get; set; } = new List<PostApply>();
 
     public virtual ICollection<ProductPost> ProductPosts { get; set; } = new List<ProductPost>();
+
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
     public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
 }
