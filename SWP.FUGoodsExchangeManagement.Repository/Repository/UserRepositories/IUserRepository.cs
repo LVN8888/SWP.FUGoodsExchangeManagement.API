@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepository
+namespace SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories
 {
     public interface IUserRepository : IGenericRepository<User>
     {

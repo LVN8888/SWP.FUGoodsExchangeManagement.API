@@ -1,4 +1,5 @@
 ﻿using SWP.FUGoodsExchangeManagement.Repository.Models;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,20 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly FugoodsExchangeManagementContext context;
-        public UnitOfWork(FugoodsExchangeManagementContext dbContext)
+        private readonly FugoodsExchangeManagementContext _context;
+        private readonly IUserRepository _userRepository;
+
+        public UnitOfWork(FugoodsExchangeManagementContext context, IUserRepository userRepository)
         {
-            context = dbContext;
+            _context = context;
+            _userRepository = userRepository;
         }
+
+        public async Task<int> SaveChangeAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
+        public IUserRepository UserRepository => _userRepository;
     }
 }
