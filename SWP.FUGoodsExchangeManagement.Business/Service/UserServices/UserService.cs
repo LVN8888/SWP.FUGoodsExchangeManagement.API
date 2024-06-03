@@ -9,7 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
 {
@@ -53,6 +55,16 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             if (currentUser != null)
             {
                 throw new Exception("User email existed!");
+            }
+
+            if (!request.Email.EndsWith("@fpt.edu.vn") && !request.Email.EndsWith("@fe.edu.vn"))
+            {
+                throw new Exception("Email is not in correct format. Please input @fpt email!");
+            }
+
+            if (!Regex.Match(request.PhoneNumber, @"^\d{10,11}$").Success)
+            {
+                throw new Exception("Phone number is not in correct format!");
             }
 
             User newUser = _mapper.Map<User>(request);
