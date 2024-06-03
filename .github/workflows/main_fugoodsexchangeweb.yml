@@ -23,7 +23,7 @@ jobs:
           include-prerelease: true
 
       - name: Rewrite appsettings
-        run: cat ..\.env.production > ..\SWP.FUGoodsExchangeManagement.API\appsettings.json
+        run: cat ..\..\.env.production > ..\..\SWP.FUGoodsExchangeManagement.API\appsettings.json
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
