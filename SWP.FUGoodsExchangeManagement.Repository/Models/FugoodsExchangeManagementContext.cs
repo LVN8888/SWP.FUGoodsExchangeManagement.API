@@ -23,6 +23,8 @@ public partial class FugoodsExchangeManagementContext : DbContext
 
     public virtual DbSet<ChatDetail> ChatDetails { get; set; }
 
+    public virtual DbSet<Otpcode> Otpcodes { get; set; }
+
     public virtual DbSet<Payment> Payments { get; set; }
 
     public virtual DbSet<PostApply> PostApplies { get; set; }
@@ -33,15 +35,21 @@ public partial class FugoodsExchangeManagementContext : DbContext
 
     public virtual DbSet<ProductPost> ProductPosts { get; set; }
 
+    public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+
     public virtual DbSet<Report> Reports { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=fugoodsexchange.database.windows.net;uid=fuadmin01;pwd=AdmPass01;database=FUGoodsExchangeManagement;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Campus>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Campus__3214EC0791E0429A");
+            entity.HasKey(e => e.Id).HasName("PK__Campus__3214EC0747FAEA24");
 
             entity.ToTable("Campus");
 
@@ -56,7 +64,7 @@ public partial class FugoodsExchangeManagementContext : DbContext
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC07BE2F0EC9");
+            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC0708712A4F");
 
             entity.ToTable("Category");
 
@@ -71,7 +79,7 @@ public partial class FugoodsExchangeManagementContext : DbContext
 
         modelBuilder.Entity<Chat>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Chat__3214EC07AF6BFC5C");
+            entity.HasKey(e => e.Id).HasName("PK__Chat__3214EC07E14D3471");
 
             entity.ToTable("Chat");
 
@@ -95,17 +103,17 @@ public partial class FugoodsExchangeManagementContext : DbContext
             entity.HasOne(d => d.Buyer).WithMany(p => p.Chats)
                 .HasForeignKey(d => d.BuyerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Chat__BuyerId__440B1D61");
+                .HasConstraintName("FK__Chat__BuyerId__5629CD9C");
 
             entity.HasOne(d => d.ProductPost).WithMany(p => p.Chats)
                 .HasForeignKey(d => d.ProductPostId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Chat__ProductPos__4222D4EF");
+                .HasConstraintName("FK__Chat__ProductPos__73BA3083");
         });
 
         modelBuilder.Entity<ChatDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ChatDeta__3214EC07C28A5BE2");
+            entity.HasKey(e => e.Id).HasName("PK__ChatDeta__3214EC078FA4DC87");
 
             entity.HasIndex(e => e.ChatId, "idx_chatdetails_chatid");
 
@@ -125,12 +133,40 @@ public partial class FugoodsExchangeManagementContext : DbContext
             entity.HasOne(d => d.Chat).WithMany(p => p.ChatDetails)
                 .HasForeignKey(d => d.ChatId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ChatDetai__ChatI__4316F928");
+                .HasConstraintName("FK__ChatDetai__ChatI__75A278F5");
+        });
+
+        modelBuilder.Entity<Otpcode>(entity =>
+        {
+            entity.ToTable("OTPCode");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(36)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Otp)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("OTP");
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.UserId)
+                .HasMaxLength(36)
+                .IsUnicode(false)
+                .IsFixedLength();
+
+            entity.HasOne(d => d.User).WithMany(p => p.Otpcodes)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_OTPCode_User");
         });
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC078F64EB19");
+            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC0766149180");
 
             entity.ToTable("Payment");
 
@@ -158,17 +194,17 @@ public partial class FugoodsExchangeManagementContext : DbContext
             entity.HasOne(d => d.PostMode).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.PostModeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Payment__PostMod__403A8C7D");
+                .HasConstraintName("FK__Payment__PostMod__787EE5A0");
 
             entity.HasOne(d => d.ProductPost).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.ProductPostId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Payment__Product__3C69FB99");
+                .HasConstraintName("FK__Payment__Product__778AC167");
         });
 
         modelBuilder.Entity<PostApply>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PostAppl__3214EC07F09A8A21");
+            entity.HasKey(e => e.Id).HasName("PK__PostAppl__3214EC07EBB69B17");
 
             entity.ToTable("PostApply");
 
@@ -195,17 +231,17 @@ public partial class FugoodsExchangeManagementContext : DbContext
             entity.HasOne(d => d.Buyer).WithMany(p => p.PostApplies)
                 .HasForeignKey(d => d.BuyerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PostApply__Buyer__37A5467C");
+                .HasConstraintName("FK__PostApply__Buyer__49C3F6B7");
 
             entity.HasOne(d => d.ProductPost).WithMany(p => p.PostApplies)
                 .HasForeignKey(d => d.ProductPostId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PostApply__Produ__3A81B327");
+                .HasConstraintName("FK__PostApply__Produ__797309D9");
         });
 
         modelBuilder.Entity<PostMode>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PostMode__3214EC07C6B1F16B");
+            entity.HasKey(e => e.Id).HasName("PK__PostMode__3214EC07ACF31163");
 
             entity.ToTable("PostMode");
 
@@ -226,7 +262,7 @@ public partial class FugoodsExchangeManagementContext : DbContext
 
         modelBuilder.Entity<ProductImage>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ProductI__3214EC070054E086");
+            entity.HasKey(e => e.Id).HasName("PK__ProductI__3214EC073D6B35B6");
 
             entity.HasIndex(e => e.ProductPostId, "idx_productimages_productpostid");
 
@@ -245,12 +281,12 @@ public partial class FugoodsExchangeManagementContext : DbContext
             entity.HasOne(d => d.ProductPost).WithMany(p => p.ProductImages)
                 .HasForeignKey(d => d.ProductPostId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ProductIm__Produ__3D5E1FD2");
+                .HasConstraintName("FK__ProductIm__Produ__7B5B524B");
         });
 
         modelBuilder.Entity<ProductPost>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ProductP__3214EC0744F7DED1");
+            entity.HasKey(e => e.Id).HasName("PK__ProductP__3214EC07D63DEE42");
 
             entity.ToTable("ProductPost");
 
@@ -292,27 +328,50 @@ public partial class FugoodsExchangeManagementContext : DbContext
             entity.HasOne(d => d.Campus).WithMany(p => p.ProductPosts)
                 .HasForeignKey(d => d.CampusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ProductPo__Campu__3E52440B");
+                .HasConstraintName("FK__ProductPo__Campu__7C4F7684");
 
             entity.HasOne(d => d.Category).WithMany(p => p.ProductPosts)
                 .HasForeignKey(d => d.CategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ProductPo__Categ__412EB0B6");
+                .HasConstraintName("FK__ProductPo__Categ__7E37BEF6");
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.ProductPosts)
                 .HasForeignKey(d => d.CreatedBy)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ProductPo__Creat__398D8EEE");
+                .HasConstraintName("FK__ProductPo__Creat__4BAC3F29");
 
             entity.HasOne(d => d.PostMode).WithMany(p => p.ProductPosts)
                 .HasForeignKey(d => d.PostModeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ProductPo__PostM__3F466844");
+                .HasConstraintName("FK__ProductPo__PostM__7D439ABD");
+        });
+
+        modelBuilder.Entity<RefreshToken>(entity =>
+        {
+            entity.ToTable("RefreshToken");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(36)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.ExpiredDate).HasColumnType("datetime");
+            entity.Property(e => e.RefreshToken1)
+                .IsUnicode(false)
+                .HasColumnName("RefreshToken");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(36)
+                .IsUnicode(false)
+                .IsFixedLength();
+
+            entity.HasOne(d => d.User).WithMany(p => p.RefreshTokens)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_RefreshToken_User");
         });
 
         modelBuilder.Entity<Report>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Report__3214EC0781570B97");
+            entity.HasKey(e => e.Id).HasName("PK__Report__3214EC07F6812D3F");
 
             entity.ToTable("Report");
 
@@ -340,17 +399,17 @@ public partial class FugoodsExchangeManagementContext : DbContext
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Reports)
                 .HasForeignKey(d => d.CreatedBy)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Report__CreatedB__38996AB5");
+                .HasConstraintName("FK__Report__CreatedB__4AB81AF0");
 
             entity.HasOne(d => d.ProductPost).WithMany(p => p.Reports)
                 .HasForeignKey(d => d.ProductPostId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Report__ProductP__3B75D760");
+                .HasConstraintName("FK__Report__ProductP__01142BA1");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__User__3214EC07635784BE");
+            entity.HasKey(e => e.Id).HasName("PK__User__3214EC071D94A641");
 
             entity.ToTable("User");
 
@@ -367,7 +426,7 @@ public partial class FugoodsExchangeManagementContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Password)
-                .HasMaxLength(255)
+                .HasMaxLength(256)
                 .IsUnicode(false);
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(12)
