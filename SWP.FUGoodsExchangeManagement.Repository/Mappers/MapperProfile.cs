@@ -14,6 +14,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Mappers
         public MapperProfile()
         {
             CreateMap<UserRegisterRequestModel, User>();
+            CreateMap<UserRegisterRequestModelVer1, User>();
         }
     }
 }

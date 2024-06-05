@@ -71,9 +71,10 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.GenericRepository
 
         public virtual async Task<TEntity> GetSingle(
             Expression<Func<TEntity, bool>> filter = null,
-            string includeProperties = "")  // Optional parameter for pagination (number of records per page)
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            string includeProperties = "")
         {
-            var query = GetQueryable(filter, null, includeProperties, null, null);
+            var query = GetQueryable(filter, orderBy, includeProperties, null, null);
             return await query.SingleOrDefaultAsync();
         }
 

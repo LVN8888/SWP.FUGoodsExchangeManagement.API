@@ -17,6 +17,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.GenericRepository
             int? pageSize = null);
         Task<TEntity> GetSingle(
             Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "");
 
         Task<TEntity> GetByID(int id);

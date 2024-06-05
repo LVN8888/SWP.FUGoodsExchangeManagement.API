@@ -13,13 +13,17 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
+    public string Salt { get; set; } = null!;
+
     public string PhoneNumber { get; set; } = null!;
 
     public string Role { get; set; } = null!;
 
+    public string Status { get; set; } = null!;
+
     public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
 
-    public virtual ICollection<Otpcode> Otpcodes { get; set; } = new List<Otpcode>();
+    public virtual ICollection<Otp> Otps { get; set; } = new List<Otp>();
 
     public virtual ICollection<PostApply> PostApplies { get; set; } = new List<PostApply>();
 
