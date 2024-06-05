@@ -14,6 +14,17 @@ namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs
 
         public string Password { get; set; } = null!;
 
+        public string Role { get; set; } = null!;   
+
+        public string PhoneNumber { get; set; } = null!;
+    }
+    
+    public class UserRegisterRequestModelVer1
+    {
+        public string Fullname { get; set; } = null!;
+
+        public string Email { get; set; } = null!;
+
         public string PhoneNumber { get; set; } = null!;
     }
 }

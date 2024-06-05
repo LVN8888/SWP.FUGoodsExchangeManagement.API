@@ -11,5 +11,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
     {
         Task<UserLoginResponseModel> CheckLogin(UserLoginRequestModel requestModel);
         Task Register(UserRegisterRequestModel requestModel);
+        Task RegisterAccount(UserRegisterRequestModelVer1 request);
     }
 }

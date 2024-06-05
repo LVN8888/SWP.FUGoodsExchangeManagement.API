@@ -1,10 +1,10 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SWP.FUGoodsExchangeManagement.API.Middleware;
 using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Repository.Mappers;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
@@ -32,6 +32,7 @@ builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMailService, MailService>();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 

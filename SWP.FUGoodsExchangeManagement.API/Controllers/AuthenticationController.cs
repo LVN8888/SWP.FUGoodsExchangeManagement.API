@@ -18,17 +18,25 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<UserLoginResponseModel> Login(UserLoginRequestModel request)
+        public async Task<IActionResult> Login(UserLoginRequestModel request)
         {
             var user =  await _userService.CheckLogin(request);
-            return user;
+            return Ok(user);
         }
 
         [HttpPost]
-        [Route("register")]
+        [Route("register-test")]
         public async Task<IActionResult> Register(UserRegisterRequestModel request)
         {
             await _userService.Register(request);
+            return Ok("Register successfully!");
+        }
+        
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> RegisterAccount(UserRegisterRequestModelVer1 request)
+        {
+            await _userService.RegisterAccount(request);
             return Ok("Register successfully!");
         }
     }

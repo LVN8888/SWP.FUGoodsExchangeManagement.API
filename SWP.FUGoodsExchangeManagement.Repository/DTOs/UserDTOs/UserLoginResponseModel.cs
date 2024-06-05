@@ -8,7 +8,16 @@ namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs
 {
     public class UserLoginResponseModel
     {
+        public UserInfo UserInfo { get; set; } = null!;
+        public string token { get; set; } = null!;
+
+    }
+
+    public class UserInfo
+    {
+        public string Fullname { get; set; } = null!;
+        public string Email { get; set; } = null!;
         public string Role { get; set; } = null!;
-        public string Token { get; set; } = null!;
+        public string PhoneNumber { get; set; } = null!;
     }
 }
