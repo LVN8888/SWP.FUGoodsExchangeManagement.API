@@ -7,7 +7,7 @@ public partial class Otp
 {
     public string Id { get; set; } = null!;
 
-    public string Otp1 { get; set; } = null!;
+    public string Code { get; set; } = null!;
 
     public string UserId { get; set; } = null!;
 

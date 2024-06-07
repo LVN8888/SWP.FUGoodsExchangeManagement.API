@@ -9,7 +9,7 @@ public partial class RefreshToken
 
     public string UserId { get; set; } = null!;
 
-    public string RefreshToken1 { get; set; } = null!;
+    public string Token { get; set; } = null!;
 
     public DateTime ExpiredDate { get; set; }
 

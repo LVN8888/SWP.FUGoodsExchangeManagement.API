@@ -39,12 +39,12 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
 
             if (user == null)
             {
-                throw new Exception("User email not exist!");
+                throw new CustomException("User email not exist!");
             }
 
             if (!PasswordHasher.VerifyPassword(request.Password, user.Salt, user.Password))
             {
-                throw new Exception("Password incorrect!");
+                throw new CustomException("Password incorrect!");
             }
 
             return new UserLoginResponseModel()
@@ -150,14 +150,69 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
 
             if (result < 1)
             {
-                throw new CustomException("Internal Server Error");
+                throw new Exception("Internal Server Error");
             }
         }
 
-        public async Task ChangePassword(UserResetPasswordRequestModel request)
+        public async Task ResetPassword(UserResetPasswordRequestModel request)
         {
-            User currentUser = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(request.UserId));
+            var user = await _unitOfWork.UserRepository.GetSingle(u => u.Email.Equals(request.Email));
+            if (user == null)
+            {
+                throw new CustomException("There is no account using this email!");
+            }
 
+            if (!request.NewPassword.Equals(request.ConfirmPassword))
+            {
+                throw new CustomException("Password and comfirm password must match");
+            }
+
+            var (salt, hash) = PasswordHasher.HashPassword(request.NewPassword);
+            user.Password = hash;
+            user.Salt = salt;
+
+            _unitOfWork.UserRepository.Update(user);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
+        public async Task ChangePassword(UserChangePasswordRequestModel model, string token)
+        {
+            var userId = _authenticationService.decodeToken(token, "userId");
+            var user = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(userId));
+            if (user == null)
+            {
+                throw new CustomException("There is no account using this email!");
+            }
+
+            if (!PasswordHasher.VerifyPassword(model.OldPassword, user.Salt, user.Password))
+            {
+                throw new CustomException("Password incorrect!");
+            }
+
+            if (!model.NewPassword.Equals(model.ConfirmPassword))
+            {
+                throw new CustomException("Password and comfirm password must match");
+            }
+
+            if (PasswordHasher.VerifyPassword(model.NewPassword, user.Salt, user.Password))
+            {
+                throw new CustomException("New password must not match old password");
+            }
+
+            var (salt, hash) = PasswordHasher.HashPassword(model.NewPassword);
+            user.Password = hash;
+            user.Salt = salt;
+
+            _unitOfWork.UserRepository.Update(user);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
         }
     }
 }

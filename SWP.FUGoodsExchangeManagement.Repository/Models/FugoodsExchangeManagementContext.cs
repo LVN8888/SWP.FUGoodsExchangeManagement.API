@@ -136,12 +136,11 @@ public partial class FugoodsExchangeManagementContext : DbContext
                 .HasMaxLength(36)
                 .IsUnicode(false)
                 .IsFixedLength();
-            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
-            entity.Property(e => e.Otp1)
+            entity.Property(e => e.Code)
                 .HasMaxLength(6)
                 .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("OTP");
+                .IsFixedLength();
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.UserId)
                 .HasMaxLength(36)
                 .IsUnicode(false)
@@ -338,9 +337,7 @@ public partial class FugoodsExchangeManagementContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength();
             entity.Property(e => e.ExpiredDate).HasColumnType("datetime");
-            entity.Property(e => e.RefreshToken1)
-                .IsUnicode(false)
-                .HasColumnName("RefreshToken");
+            entity.Property(e => e.Token).IsUnicode(false);
             entity.Property(e => e.UserId)
                 .HasMaxLength(36)
                 .IsUnicode(false)

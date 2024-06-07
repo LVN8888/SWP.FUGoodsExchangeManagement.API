@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs
 {
-    public class UserResetPasswordRequestModel
+    public class UserChangePasswordRequestModel
     {
-        public string Email { get; set; } = null!;
+        public string OldPassword { get; set; } = null!;
         public string NewPassword { get; set; } = null!;
         public string ConfirmPassword { get; set; } = null!;
     }
