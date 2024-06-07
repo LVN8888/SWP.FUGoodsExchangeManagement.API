@@ -1,4 +1,5 @@
 ﻿using SWP.FUGoodsExchangeManagement.Repository.Models;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,13 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
     {
         private readonly FugoodsExchangeManagementContext _context;
         private readonly IUserRepository _userRepository;
+        private readonly IOTPRepository _oTPRepository;
 
-        public UnitOfWork(FugoodsExchangeManagementContext context, IUserRepository userRepository)
+        public UnitOfWork(FugoodsExchangeManagementContext context, IUserRepository userRepository, IOTPRepository oTPRepository)
         {
             _context = context;
             _userRepository = userRepository;
+            _oTPRepository = oTPRepository;
         }
 
         public async Task<int> SaveChangeAsync()
@@ -25,5 +28,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
         }
 
         public IUserRepository UserRepository => _userRepository;
+        public IOTPRepository OTPRepository => _oTPRepository;
     }
 }
