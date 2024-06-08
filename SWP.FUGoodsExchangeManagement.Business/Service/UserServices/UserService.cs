@@ -4,7 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Utils;
-using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.RequestModels;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.ResponseModels;
 using SWP.FUGoodsExchangeManagement.Repository.Enums;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.UnitOfWork;
@@ -24,6 +25,8 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
         private readonly IMapper _mapper;
         private readonly IAuthenticationService _authenticationService;
         private readonly IMailService _mailService;
+
+        private const int UserPerPage = 10;
 
         public UserService(IUnitOfWork unitOfWork, IMapper mapper, IAuthenticationService authenticationService, IMailService mailService)
         {
@@ -213,6 +216,38 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             {
                 throw new Exception("Internal Server Error");
             }
+        }
+
+        private Func<IQueryable<User>, IOrderedQueryable<User>> GetOrderQuery(string sort)
+        {
+            switch (sort)
+            {
+                case nameof(UserSortEnums.Name_Desc):
+                    return u => u.OrderByDescending(u => u.Fullname);
+                case nameof(UserSortEnums.Name_Asc):
+                    return u => u.OrderBy(u => u.Fullname);
+                default:
+                    return u => u.OrderBy(u => u.Fullname);
+            }
+        }
+
+        public async Task<List<UserListResponseModel>> GetUserList(int? page, string? search, string? sort, string? userRole)
+        {
+            if (!string.IsNullOrEmpty(userRole) && !Enum.IsDefined(typeof(RoleEnums), userRole))
+                throw new CustomException("User role is not valid");
+            if (!string.IsNullOrEmpty(sort) && !Enum.IsDefined(typeof(UserSortEnums), sort))
+                throw new CustomException("Sort value is not valid");
+
+            var searchUnsign = Util.ConvertToUnsign(search ?? "");
+
+            var qr = await _unitOfWork.UserRepository.Get(pageIndex: page ?? 0,
+                                                          pageSize: UserPerPage,
+                                                          filter: (u => (u.Fullname.Contains(searchUnsign) || u.Email.Contains(searchUnsign)) &&
+                                                                        (string.IsNullOrEmpty(userRole) || u.Role.Equals(userRole))
+                                                                  ),
+                                                          orderBy: GetOrderQuery(sort)
+                                                         );
+            return _mapper.Map<List<UserListResponseModel>>(qr);
         }
     }
 }
