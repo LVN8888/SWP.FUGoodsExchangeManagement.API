@@ -4,7 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Utils;
-using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.RequestModels;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.ResponseModels;
 using SWP.FUGoodsExchangeManagement.Repository.Enums;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.UnitOfWork;
@@ -24,6 +25,8 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
         private readonly IMapper _mapper;
         private readonly IAuthenticationService _authenticationService;
         private readonly IMailService _mailService;
+
+        private const int UserPerPage = 10;
 
         public UserService(IUnitOfWork unitOfWork, IMapper mapper, IAuthenticationService authenticationService, IMailService mailService)
         {
@@ -213,6 +216,13 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             {
                 throw new Exception("Internal Server Error");
             }
+        }
+
+        public async Task<List<UserListResponseModel>> GetUserList(int? page)
+        {
+            var qr = await _unitOfWork.UserRepository.Get(pageIndex: page,
+                                                          pageSize: UserPerPage);
+            return _mapper.Map<List<UserListResponseModel>>(qr);
         }
     }
 }
