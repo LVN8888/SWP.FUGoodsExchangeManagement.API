@@ -49,6 +49,23 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
 
             var tokens = _authenticationService.GenerateJWT(user);
 
+            var refreshToken = new RefreshToken
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserId = user.Id,
+                Token = tokens.refreshToken,
+                ExpiredDate = DateTime.Now.AddDays(2)
+            };
+
+            await _unitOfWork.TokenRepository.Insert(refreshToken);
+
+            var result = await _unitOfWork.SaveChangeAsync();
+
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+
             return new UserLoginResponseModel()
             {
                 UserInfo = new UserInfo
@@ -61,6 +78,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
                 accessToken = tokens.accessToken,
                 refreshToken = tokens.refreshToken
             };
+
         }
 
 

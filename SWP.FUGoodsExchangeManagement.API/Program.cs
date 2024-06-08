@@ -9,6 +9,7 @@ using SWP.FUGoodsExchangeManagement.Business.Service.OTPServices;
 using SWP.FUGoodsExchangeManagement.Repository.Mappers;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.TokenRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Service.UserServices;
 using SWP.FUGoodsExchangeManagement.Repository.UnitOfWork;
@@ -35,6 +36,7 @@ builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMailService, MailService>();
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IOTPService, OTPService>();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
