@@ -17,9 +17,12 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUserList([FromQuery] int? page)
+        public async Task<IActionResult> GetUserList([FromQuery] int? page,
+                                                     [FromQuery] string? search,
+                                                     [FromQuery] string? sort,
+                                                     [FromQuery] string? userRole)
         {
-            var list = await _userService.GetUserList(page);
+            var list = await _userService.GetUserList(page, search, sort, userRole);
             return Ok(list);
         }
 

@@ -218,10 +218,35 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             }
         }
 
-        public async Task<List<UserListResponseModel>> GetUserList(int? page)
+        private Func<IQueryable<User>, IOrderedQueryable<User>> GetOrderQuery(string sort)
         {
-            var qr = await _unitOfWork.UserRepository.Get(pageIndex: page,
-                                                          pageSize: UserPerPage);
+            switch (sort)
+            {
+                case nameof(UserSortEnums.Name_Desc):
+                    return u => u.OrderByDescending(u => u.Fullname);
+                case nameof(UserSortEnums.Name_Asc):
+                    return u => u.OrderBy(u => u.Fullname);
+                default:
+                    return u => u.OrderBy(u => u.Fullname);
+            }
+        }
+
+        public async Task<List<UserListResponseModel>> GetUserList(int? page, string? search, string? sort, string? userRole)
+        {
+            if (!string.IsNullOrEmpty(userRole) && !Enum.IsDefined(typeof(RoleEnums), userRole))
+                throw new CustomException("User role is not valid");
+            if (!string.IsNullOrEmpty(sort) && !Enum.IsDefined(typeof(UserSortEnums), sort))
+                throw new CustomException("Sort value is not valid");
+
+            var searchUnsign = Util.ConvertToUnsign(search ?? "");
+
+            var qr = await _unitOfWork.UserRepository.Get(pageIndex: page ?? 0,
+                                                          pageSize: UserPerPage,
+                                                          filter: (u => (u.Fullname.Contains(searchUnsign) || u.Email.Contains(searchUnsign)) &&
+                                                                        (string.IsNullOrEmpty(userRole) || u.Role.Equals(userRole))
+                                                                  ),
+                                                          orderBy: GetOrderQuery(sort)
+                                                         );
             return _mapper.Map<List<UserListResponseModel>>(qr);
         }
     }
