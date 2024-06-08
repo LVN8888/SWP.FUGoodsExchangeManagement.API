@@ -15,6 +15,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
         Task RegisterAccount(UserRegisterRequestModelVer1 request);
         Task ResetPassword(UserResetPasswordRequestModel request);
         Task ChangePassword(UserChangePasswordRequestModel model, string token);
-        Task<List<UserListResponseModel>> GetUserList(int? page);
+        Task<List<UserListResponseModel>> GetUserList(int? page, string? search, string? sort, string? userRole);
     }
 }
