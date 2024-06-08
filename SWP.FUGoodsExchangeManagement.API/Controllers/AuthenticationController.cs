@@ -48,15 +48,5 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             await _userService.ResetPassword(request);
             return Ok();
         }
-
-        [Authorize(Roles = "User, Admin")]
-        [HttpPost]
-        [Route("password/change")]
-        public async Task<IActionResult> ChangePassword(UserChangePasswordRequestModel request)
-        {
-            var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ")[1];
-            await _userService.ChangePassword(request, token);
-            return Ok();
-        }
     }
 }
