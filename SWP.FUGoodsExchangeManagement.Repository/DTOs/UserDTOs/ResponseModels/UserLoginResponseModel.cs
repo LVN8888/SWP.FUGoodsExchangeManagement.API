@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs
+namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.ResponseModels
 {
     public class UserLoginResponseModel
     {
