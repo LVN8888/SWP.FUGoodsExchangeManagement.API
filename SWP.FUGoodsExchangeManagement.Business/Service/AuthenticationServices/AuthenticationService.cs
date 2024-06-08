@@ -18,15 +18,15 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices
             _tokenHandler = new JwtSecurityTokenHandler();
         }
 
-        public string GenerateJWT(User User)
+        public (string accessToken, string refreshToken) GenerateJWT(User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:JwtKey"]));
             var credential = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             List<Claim> claims = new()
             {
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, User.Role),
-                new Claim("userId", User.Id),
-                new Claim("email", User.Email),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role),
+                new Claim("userId", user.Id),
+                new Claim("email", user.Email),
             };
 
             var token = new JwtSecurityToken(
@@ -36,13 +36,16 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices
                 expires: DateTime.Now.AddHours(1),
                 signingCredentials: credential
                 );
-            var encodetoken = new JwtSecurityTokenHandler().WriteToken(token);
-            return encodetoken;
+
+            var encodedToken = _tokenHandler.WriteToken(token);
+            var refreshToken = Guid.NewGuid().ToString();
+
+            return (encodedToken, refreshToken);
         }
 
         public string decodeToken(string jwtToken, string nameClaim)
         {
-            Claim? claim = _tokenHandler.ReadJwtToken(jwtToken).Claims.FirstOrDefault(selector => selector.Type.ToString().Equals(nameClaim));
+            Claim? claim = _tokenHandler.ReadJwtToken(jwtToken).Claims.FirstOrDefault(selector => selector.Type.Equals(nameClaim));
             return claim != null ? claim.Value : "Error!!!";
         }
     }

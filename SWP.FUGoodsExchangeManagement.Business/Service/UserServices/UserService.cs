@@ -47,6 +47,8 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
                 throw new CustomException("Password incorrect!");
             }
 
+            var tokens = _authenticationService.GenerateJWT(user);
+
             return new UserLoginResponseModel()
             {
                 UserInfo = new UserInfo
@@ -56,9 +58,11 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
                     PhoneNumber = user.PhoneNumber,
                     Role = user.Role
                 },
-                token = _authenticationService.GenerateJWT(user)
+                accessToken = tokens.accessToken,
+                refreshToken = tokens.refreshToken
             };
         }
+
 
         public async Task Register(UserRegisterRequestModel request)
         {
