@@ -1,4 +1,5 @@
-﻿using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs;
+﻿using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
         Task RegisterAccount(UserRegisterRequestModelVer1 request);
         Task ResetPassword(UserResetPasswordRequestModel request);
         Task ChangePassword(UserChangePasswordRequestModel model, string token);
+        Task<NewRefreshTokenResponseModel> GetNewRefreshToken(GetNewRefreshTokenDTO newRefreshToken);
     }
 }

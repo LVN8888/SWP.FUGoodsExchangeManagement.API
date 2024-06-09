@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Azure.Core;
 using Microsoft.IdentityModel.Tokens;
+using MimeKit.Encodings;
+using Org.BouncyCastle.Asn1.Ocsp;
 using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Utils;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.Enums;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
@@ -32,6 +35,32 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             _authenticationService = authenticationService;
             _mailService = mailService;
         }
+
+        public async Task<NewRefreshTokenResponseModel> GetNewRefreshToken(GetNewRefreshTokenDTO newRefreshToken)
+        {
+            RefreshToken refreshToken = await _unitOfWork.TokenRepository.GetSingle(t => t.Token.Equals(newRefreshToken.refreshToken));
+            if (refreshToken == null)
+            {
+                throw new CustomException("Refresh token not exist!");
+            }
+            User user = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(refreshToken.UserId));
+            var newAccessToken = _authenticationService.GenerateJWT(user);
+            var updatedRefreshTokenDto = new NewRefreshTokenResponseModel
+            {
+                accessToken = newAccessToken.accessToken,
+                refreshToken = newAccessToken.refreshToken
+            };
+            refreshToken.Token = newAccessToken.refreshToken;
+            RefreshToken newrefreshToken = _mapper.Map<RefreshToken>(refreshToken);
+            _unitOfWork.TokenRepository.Update(newrefreshToken);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+            return updatedRefreshTokenDto;
+        }
+
 
         public async Task<UserLoginResponseModel> CheckLogin(UserLoginRequestModel request)
         {

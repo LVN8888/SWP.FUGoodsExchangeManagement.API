@@ -8,9 +8,9 @@ namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs
 {
     public class RefreshTokenDTO
     {
-        public string Id { get; set; }
-        public string UserId { get; set; }
-        public string Token { get; set; }
+        public string Id { get; set; } = null!;
+        public string UserId { get; set; } = null!;
+        public string Token { get; set; } = null!;
         public DateTime ExpiredDate { get; set; }
     }
 }
