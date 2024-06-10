@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.Service.UserServices;
 
 namespace SWP.FUGoodsExchangeManagement.API.Controllers
