@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.RequestModels;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.Service.UserServices;
 
 namespace SWP.FUGoodsExchangeManagement.API.Controllers
@@ -15,6 +16,14 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         public AuthenticationController(IUserService userService)
         {
             _userService = userService;
+        }
+
+        [HttpPost]
+        [Route("refresh-token")]
+        public async Task<IActionResult> RefreshToken(GetNewRefreshTokenDTO newRefreshToken)
+        {
+            var newrefreshToken = await _userService.GetNewRefreshToken(newRefreshToken);
+            return Ok(newrefreshToken);
         }
 
         [HttpPost]
