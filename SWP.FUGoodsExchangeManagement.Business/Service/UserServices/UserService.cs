@@ -334,5 +334,47 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             }
         }
 
+        public async Task EditUser(UserEditRequestModel request)
+        {
+            var user = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(request.Id));
+            if (user == null)
+            {
+                throw new CustomException("User not found!");
+            }
+            var existingUserWithEmail = await _unitOfWork.UserRepository.GetSingle(u => u.Email.Equals(request.Email) && !u.Id.Equals(request.Id));
+            if (existingUserWithEmail != null)
+            {
+                throw new CustomException("Email already exists!");
+            }
+            var existingUserWithPhoneNumber = await _unitOfWork.UserRepository.GetSingle(u => u.PhoneNumber.Equals(request.PhoneNumber) && !u.Id.Equals(request.Id));
+            if (existingUserWithPhoneNumber != null)
+            {
+                throw new CustomException("Phone number already exists!");
+            }
+
+            if (!Enum.IsDefined(typeof(RoleEnums), request.Role))
+            {
+                throw new CustomException("Role is not valid.");
+            }
+
+            if (!request.Email.EndsWith("@fpt.edu.vn") && !request.Email.EndsWith("@fe.edu.vn"))
+            {
+                throw new CustomException("Email is not in correct format. Please input @fpt email!");
+            }
+
+            user.Fullname = request.Fullname;
+            user.Email = request.Email;
+            user.PhoneNumber = request.PhoneNumber;
+            user.Role = request.Role;
+
+            _unitOfWork.UserRepository.Update(user);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
+
     }
 }

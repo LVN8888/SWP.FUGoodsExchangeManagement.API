@@ -51,8 +51,21 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         public async Task<IActionResult> DeactivateUser(string userId)
         {
             await _userService.DeactivateUser(userId);
-            return Ok(new { message = "User deactivated successfully" });
+            return Ok( new { message = "User deactivated successfully" });
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [Route("edit-user")]
+        public async Task<IActionResult> EditUser([FromBody] UserEditRequestModel request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _userService.EditUser(request);
+            return Ok( new { message = "User details updated successfully" });
+        }
     }
 }
