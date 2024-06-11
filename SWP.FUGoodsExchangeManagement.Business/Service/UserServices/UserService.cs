@@ -301,5 +301,38 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
                                                          );
             return _mapper.Map<List<UserListResponseModel>>(qr);
         }
+
+        public async Task ActivateUser(string userId)
+        {
+            var user = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(userId));
+            if (user == null)
+            {
+                throw new CustomException("User not found!");
+            }
+            user.Status = AccountStatusEnums.Active.ToString();
+            _unitOfWork.UserRepository.Update(user);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
+        public async Task DeactivateUser(string userId)
+        {
+            var user = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(userId));
+            if (user == null)
+            {
+                throw new CustomException("User not found!");
+            }
+            user.Status = AccountStatusEnums.Inactive.ToString();
+            _unitOfWork.UserRepository.Update(user);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
     }
 }

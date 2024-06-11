@@ -19,5 +19,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
         Task ChangePassword(UserChangePasswordRequestModel model, string token);
         Task<List<UserListResponseModel>> GetUserList(int? page, string? search, string? sort, string? userRole);
         Task<NewRefreshTokenResponseModel> GetNewRefreshToken(GetNewRefreshTokenDTO newRefreshToken);
+        Task ActivateUser(string userId);
+        Task DeactivateUser(string userId);
     }
 }

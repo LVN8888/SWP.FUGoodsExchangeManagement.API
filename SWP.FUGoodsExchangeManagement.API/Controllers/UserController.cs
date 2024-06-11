@@ -35,5 +35,24 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             await _userService.ChangePassword(request, token);
             return Ok();
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [Route("activate-user/{userId}")]
+        public async Task<IActionResult> ActivateUser(string userId)
+        {
+            await _userService.ActivateUser(userId);
+            return Ok(new { message = "User activated successfully" });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [Route("deactivate-user/{userId}")]
+        public async Task<IActionResult> DeactivateUser(string userId)
+        {
+            await _userService.DeactivateUser(userId);
+            return Ok(new { message = "User deactivated successfully" });
+        }
+
     }
 }
