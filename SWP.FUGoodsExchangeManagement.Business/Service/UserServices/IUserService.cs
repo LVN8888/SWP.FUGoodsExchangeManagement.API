@@ -22,5 +22,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
         Task ActivateUser(string userId);
         Task DeactivateUser(string userId);
         Task EditUser(UserEditRequestModel request);
+        Task ChangeUserRole(UserRoleChangeRequestModel request);
     }
 }

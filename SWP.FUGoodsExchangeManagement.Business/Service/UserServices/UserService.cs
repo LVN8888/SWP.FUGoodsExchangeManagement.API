@@ -375,6 +375,29 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             }
         }
 
+        public async Task ChangeUserRole(UserRoleChangeRequestModel request)
+        {
+            var user = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(request.UserId));
+            if (user == null)
+            {
+                throw new CustomException("User not found!");
+            }
+
+            if (!Enum.IsDefined(typeof(RoleEnums), request.NewRole))
+            {
+                throw new CustomException("Role is not valid.");
+            }
+
+            user.Role = request.NewRole;
+
+            _unitOfWork.UserRepository.Update(user);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
 
     }
 }

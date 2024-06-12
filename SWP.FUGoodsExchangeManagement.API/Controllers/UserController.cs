@@ -67,5 +67,20 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             await _userService.EditUser(request);
             return Ok( new { message = "User details updated successfully" });
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [Route("change-role")]
+        public async Task<IActionResult> ChangeUserRole([FromBody] UserRoleChangeRequestModel request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _userService.ChangeUserRole(request);
+            return Ok(new { message = "User role updated successfully" });
+        }
+
     }
 }
