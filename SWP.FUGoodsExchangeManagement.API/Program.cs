@@ -106,18 +106,21 @@ builder.Services.AddSwaggerGen(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
-
-// Add middleware
-app.UseMiddleware<GlobalExceptionMiddleware>();
+//}
 
 app.UseHttpsRedirection();
 
+// Add CORS
+app.UseCors("AllowAll");
+
 app.UseAuthorization();
+
+// Add middleware
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.MapControllers();
 
