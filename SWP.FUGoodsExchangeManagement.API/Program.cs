@@ -1,12 +1,15 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SWP.FUGoodsExchangeManagement.API.Middleware;
 using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.OTPServices;
 using SWP.FUGoodsExchangeManagement.Repository.Mappers;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.TokenRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Service.UserServices;
 using SWP.FUGoodsExchangeManagement.Repository.UnitOfWork;
@@ -32,8 +35,12 @@ builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMailService, MailService>();
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+builder.Services.AddScoped<IOTPService, OTPService>();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IOTPRepository, OTPRepository>();
 
 builder.Services.AddCors(options =>
 {
@@ -73,7 +80,7 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
+        Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,

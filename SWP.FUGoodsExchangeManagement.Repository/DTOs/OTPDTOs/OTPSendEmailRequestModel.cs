@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs
+namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.OTPDTOs
 {
-    public class UserLoginRequestModel
+    public class OTPSendEmailRequestModel
     {
         public string Email { get; set; } = null!;
-
-        public string Password { get; set; } = null!;
+        public string Subject { get; set; } = null!;
     }
 }

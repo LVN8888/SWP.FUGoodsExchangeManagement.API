@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.Service.UserServices;
 
 namespace SWP.FUGoodsExchangeManagement.API.Controllers
@@ -17,19 +20,43 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         }
 
         [HttpPost]
-        [Route("login")]
-        public async Task<UserLoginResponseModel> Login(UserLoginRequestModel request)
+        [Route("refresh-token")]
+        public async Task<IActionResult> RefreshToken(GetNewRefreshTokenDTO newRefreshToken)
         {
-            var user =  await _userService.CheckLogin(request);
-            return user;
+            var newrefreshToken = await _userService.GetNewRefreshToken(newRefreshToken);
+            return Ok(newrefreshToken);
         }
 
         [HttpPost]
-        [Route("register")]
+        [Route("login")]
+        public async Task<IActionResult> Login(UserLoginRequestModel request)
+        {
+            var user =  await _userService.CheckLogin(request);
+            return Ok(user);
+        }
+
+        [HttpPost]
+        [Route("register-test")]
         public async Task<IActionResult> Register(UserRegisterRequestModel request)
         {
             await _userService.Register(request);
             return Ok("Register successfully!");
+        }
+        
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> RegisterAccount(UserRegisterRequestModelVer1 request)
+        {
+            await _userService.RegisterAccount(request);
+            return Ok("Register successfully!");
+        }
+
+        [HttpPost]
+        [Route("password/reset")]
+        public async Task<IActionResult> ResetPassword(UserResetPasswordRequestModel request)
+        {
+            await _userService.ResetPassword(request);
+            return Ok();
         }
     }
 }
