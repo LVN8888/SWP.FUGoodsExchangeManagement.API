@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
 using Azure.Core;
 using Microsoft.IdentityModel.Tokens;
+using MimeKit.Encodings;
+using Org.BouncyCastle.Asn1.Ocsp;
 using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Utils;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.ResponseModels;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.Enums;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.UnitOfWork;
@@ -36,6 +40,32 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             _mailService = mailService;
         }
 
+        public async Task<NewRefreshTokenResponseModel> GetNewRefreshToken(GetNewRefreshTokenDTO newRefreshToken)
+        {
+            RefreshToken refreshToken = await _unitOfWork.TokenRepository.GetSingle(t => t.Token.Equals(newRefreshToken.refreshToken));
+            if (refreshToken == null)
+            {
+                throw new CustomException("Refresh token not exist!");
+            }
+            User user = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(refreshToken.UserId));
+            var newAccessToken = _authenticationService.GenerateJWT(user);
+            var updatedRefreshTokenDto = new NewRefreshTokenResponseModel
+            {
+                accessToken = newAccessToken.accessToken,
+                refreshToken = newAccessToken.refreshToken
+            };
+            refreshToken.Token = newAccessToken.refreshToken;
+            RefreshToken newrefreshToken = _mapper.Map<RefreshToken>(refreshToken);
+            _unitOfWork.TokenRepository.Update(newrefreshToken);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+            return updatedRefreshTokenDto;
+        }
+
+
         public async Task<UserLoginResponseModel> CheckLogin(UserLoginRequestModel request)
         {
             var user = await _unitOfWork.UserRepository.GetSingle(u => u.Email.Equals(request.Email));
@@ -50,6 +80,25 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
                 throw new CustomException("Password incorrect!");
             }
 
+            var tokens = _authenticationService.GenerateJWT(user);
+
+            var refreshToken = new RefreshToken
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserId = user.Id,
+                Token = tokens.refreshToken,
+                ExpiredDate = DateTime.Now.AddDays(2)
+            };
+
+            await _unitOfWork.TokenRepository.Insert(refreshToken);
+
+            var result = await _unitOfWork.SaveChangeAsync();
+
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+
             return new UserLoginResponseModel()
             {
                 UserInfo = new UserInfo
@@ -59,9 +108,12 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
                     PhoneNumber = user.PhoneNumber,
                     Role = user.Role
                 },
-                token = _authenticationService.GenerateJWT(user)
+                accessToken = tokens.accessToken,
+                refreshToken = tokens.refreshToken
             };
+
         }
+
 
         public async Task Register(UserRegisterRequestModel request)
         {
@@ -249,5 +301,103 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
                                                          );
             return _mapper.Map<List<UserListResponseModel>>(qr);
         }
+
+        public async Task ActivateUser(string userId)
+        {
+            var user = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(userId));
+            if (user == null)
+            {
+                throw new CustomException("User not found!");
+            }
+            user.Status = AccountStatusEnums.Active.ToString();
+            _unitOfWork.UserRepository.Update(user);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
+        public async Task DeactivateUser(string userId)
+        {
+            var user = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(userId));
+            if (user == null)
+            {
+                throw new CustomException("User not found!");
+            }
+            user.Status = AccountStatusEnums.Inactive.ToString();
+            _unitOfWork.UserRepository.Update(user);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
+        public async Task EditUser(UserEditRequestModel request)
+        {
+            var user = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(request.Id));
+            if (user == null)
+            {
+                throw new CustomException("User not found!");
+            }
+            var existingUserWithEmail = await _unitOfWork.UserRepository.GetSingle(u => u.Email.Equals(request.Email) && !u.Id.Equals(request.Id));
+            if (existingUserWithEmail != null)
+            {
+                throw new CustomException("Email already exists!");
+            }
+            var existingUserWithPhoneNumber = await _unitOfWork.UserRepository.GetSingle(u => u.PhoneNumber.Equals(request.PhoneNumber) && !u.Id.Equals(request.Id));
+            if (existingUserWithPhoneNumber != null)
+            {
+                throw new CustomException("Phone number already exists!");
+            }
+
+            if (!Enum.IsDefined(typeof(RoleEnums), request.Role))
+            {
+                throw new CustomException("Role is not valid.");
+            }
+
+            if (!request.Email.EndsWith("@fpt.edu.vn") && !request.Email.EndsWith("@fe.edu.vn"))
+            {
+                throw new CustomException("Email is not in correct format. Please input @fpt email!");
+            }
+
+            user.Fullname = request.Fullname;
+            user.Email = request.Email;
+            user.PhoneNumber = request.PhoneNumber;
+            user.Role = request.Role;
+
+            _unitOfWork.UserRepository.Update(user);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
+        public async Task ChangeUserRole(UserRoleChangeRequestModel request)
+        {
+            var user = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(request.UserId));
+            if (user == null)
+            {
+                throw new CustomException("User not found!");
+            }
+
+            if (!Enum.IsDefined(typeof(RoleEnums), request.NewRole))
+            {
+                throw new CustomException("Role is not valid.");
+            }
+
+            user.Role = request.NewRole;
+
+            _unitOfWork.UserRepository.Update(user);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
+
     }
 }

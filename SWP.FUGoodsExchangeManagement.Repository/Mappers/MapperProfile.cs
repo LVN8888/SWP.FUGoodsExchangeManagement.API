@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.ResponseModels;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Mappers
         {
             CreateMap<UserRegisterRequestModel, User>();
             CreateMap<UserRegisterRequestModelVer1, User>();
+            CreateMap<RefreshToken, GetNewRefreshTokenDTO>();
             CreateMap<User, UserListResponseModel>();
         }
     }

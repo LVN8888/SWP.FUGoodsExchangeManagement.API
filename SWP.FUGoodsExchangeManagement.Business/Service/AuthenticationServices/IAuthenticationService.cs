@@ -9,7 +9,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices
 {
     public interface IAuthenticationService
     {
-        string GenerateJWT(User User);
+        (string accessToken, string refreshToken) GenerateJWT(User user);
         string decodeToken(string jwtToken, string nameClaim);
     }
 }
