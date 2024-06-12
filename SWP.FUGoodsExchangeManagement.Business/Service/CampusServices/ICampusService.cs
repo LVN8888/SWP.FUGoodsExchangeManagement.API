@@ -10,6 +10,6 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.CampusServices
     public interface ICampusService
     {
         Task AddCampusAsync(AddCampusDTO addCampusDto);
-        
+        Task EditCampusAsync(EditCampusDTO editCampusDto);
     }
 }

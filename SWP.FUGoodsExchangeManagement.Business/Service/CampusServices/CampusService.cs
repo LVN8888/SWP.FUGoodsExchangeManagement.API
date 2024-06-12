@@ -1,4 +1,5 @@
-﻿using SWP.FUGoodsExchangeManagement.Business.Utils;
+﻿using Microsoft.IdentityModel.Abstractions;
+using SWP.FUGoodsExchangeManagement.Business.Utils;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.CampusDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.CampusRepositories;
@@ -24,8 +25,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.CampusServices
 
         public async Task AddCampusAsync(AddCampusDTO addCampusDto)
         {
-            if (string.IsNullOrWhiteSpace(addCampusDto.Name))
-                throw new CustomException("Campus name cannot be empty");
+            if (string.IsNullOrWhiteSpace(addCampusDto.Name)) throw new CustomException("Campus name cannot be empty");
 
             var existingCampus = await _campusRepository.GetSingle(c => c.Name == addCampusDto.Name);
             if (existingCampus != null) throw new CustomException("A campus with this name already exists");
@@ -35,6 +35,28 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.CampusServices
                 Name = addCampusDto.Name
             };
             await _campusRepository.Insert(newCampus);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
+        public async Task EditCampusAsync(EditCampusDTO editCampusDto)
+        {
+            if (string.IsNullOrWhiteSpace(editCampusDto.Name))
+                throw new CustomException("Campus name cannot be empty");
+
+            var existingCampus = await _campusRepository.GetSingle(c => c.Name == editCampusDto.Name && c.Id != editCampusDto.Id);
+            if (existingCampus != null)
+                throw new CustomException("A campus with this name already exists");
+
+            var campus = await _campusRepository.GetSingle(c => c.Id == editCampusDto.Id);
+            if (campus == null)
+                throw new CustomException("Campus not found");
+
+            campus.Name = editCampusDto.Name;
+            _campusRepository.Update(campus);
             var result = await _unitOfWork.SaveChangeAsync();
             if (result < 1)
             {

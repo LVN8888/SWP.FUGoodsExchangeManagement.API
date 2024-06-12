@@ -37,5 +37,28 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpPut("edit-campus")]
+        public async Task<IActionResult> EditCampus([FromBody] EditCampusDTO editCampusDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                await _campusService.EditCampusAsync(editCampusDto);
+                return Ok("Campus edited successfully");
+            }
+            catch (CustomException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }
