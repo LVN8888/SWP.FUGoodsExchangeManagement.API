@@ -112,12 +112,15 @@ var app = builder.Build();
     app.UseSwaggerUI();
 //}
 
-// Add middleware
-app.UseMiddleware<GlobalExceptionMiddleware>();
-
 app.UseHttpsRedirection();
 
+// Add CORS
+app.UseCors("AllowAll");
+
 app.UseAuthorization();
+
+// Add middleware
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.MapControllers();
 
