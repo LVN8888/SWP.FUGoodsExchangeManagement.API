@@ -62,7 +62,7 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteCampus(DeleteCampusDTO deleteCampusDTO)
+        public async Task<IActionResult> DeleteCampus([FromBody] DeleteCampusDTO deleteCampusDTO)
         {
             try
             {
