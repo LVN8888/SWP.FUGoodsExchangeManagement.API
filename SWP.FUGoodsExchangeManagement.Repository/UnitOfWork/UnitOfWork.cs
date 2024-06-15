@@ -1,4 +1,5 @@
 ﻿using SWP.FUGoodsExchangeManagement.Repository.Models;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.CategoryRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.TokenRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
@@ -16,13 +17,19 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
         private readonly IUserRepository _userRepository;
         private readonly IOTPRepository _oTPRepository;
         private readonly ITokenRepository _tokenRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public UnitOfWork(FugoodsExchangeManagementContext context, IUserRepository userRepository, IOTPRepository oTPRepository, ITokenRepository tokenRepository)
+        public UnitOfWork(FugoodsExchangeManagementContext context, 
+            IUserRepository userRepository, 
+            IOTPRepository oTPRepository, 
+            ITokenRepository tokenRepository,
+            ICategoryRepository categoryRepository)
         {
             _context = context;
             _userRepository = userRepository;
             _oTPRepository = oTPRepository;
             _tokenRepository = tokenRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<int> SaveChangeAsync()
@@ -33,5 +40,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
         public IUserRepository UserRepository => _userRepository;
         public IOTPRepository OTPRepository => _oTPRepository;
         public ITokenRepository TokenRepository => _tokenRepository;
+        public ICategoryRepository CategoryRepository => _categoryRepository;
     }
 }
