@@ -9,6 +9,7 @@ using SWP.FUGoodsExchangeManagement.Business.Service.OTPServices;
 using SWP.FUGoodsExchangeManagement.Repository.Mappers;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.TokenRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Service.UserServices;
 using SWP.FUGoodsExchangeManagement.Repository.UnitOfWork;
@@ -35,6 +36,7 @@ builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMailService, MailService>();
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IOTPService, OTPService>();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
@@ -104,18 +106,21 @@ builder.Services.AddSwaggerGen(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
-
-// Add middleware
-app.UseMiddleware<GlobalExceptionMiddleware>();
+//}
 
 app.UseHttpsRedirection();
 
+// Add CORS
+app.UseCors("AllowAll");
+
 app.UseAuthorization();
+
+// Add middleware
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.MapControllers();
 
