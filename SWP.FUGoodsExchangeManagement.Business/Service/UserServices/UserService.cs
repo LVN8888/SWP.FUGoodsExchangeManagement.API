@@ -8,7 +8,6 @@ using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Utils;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.ResponseModels;
-using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.Enums;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
@@ -20,6 +19,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.RequestModels;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.ResponseModels;
 
 namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
 {

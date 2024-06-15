@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.CampusDTOs
+namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.CampusDTOs.RequestModels
 {
     public class EditCampusDTO
     {

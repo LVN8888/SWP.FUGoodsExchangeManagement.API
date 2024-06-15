@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SWP.FUGoodsExchangeManagement.Business.Service.CampusServices;
 using SWP.FUGoodsExchangeManagement.Business.Utils;
-using SWP.FUGoodsExchangeManagement.Repository.DTOs.CampusDTOs;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.CampusDTOs.RequestModels;
 
 namespace SWP.FUGoodsExchangeManagement.API.Controllers
 {
@@ -16,7 +16,7 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             _campusService = campusService;
         }
 
-        [HttpPost("add-campus")]
+        [HttpPost("add")]
         public async Task<IActionResult> AddCampus([FromBody] AddCampusDTO addCampusDto)
         {
             if (!ModelState.IsValid)
@@ -38,7 +38,7 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             }
         }
 
-        [HttpPut("edit-campus")]
+        [HttpPut("edit")]
         public async Task<IActionResult> EditCampus([FromBody] EditCampusDTO editCampusDto)
         {
             if (!ModelState.IsValid)
@@ -72,6 +72,20 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             catch (CustomException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetAllCampuses(int pageIndex = 1, int pageSize = 10)
+        {
+            try
+            {
+                var campuses = await _campusService.GetAllCampusesAsync(pageIndex, pageSize);
+                return Ok(campuses);
             }
             catch (Exception ex)
             {

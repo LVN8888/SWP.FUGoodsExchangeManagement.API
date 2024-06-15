@@ -1,6 +1,8 @@
-﻿using Microsoft.IdentityModel.Abstractions;
+﻿using AutoMapper;
+using Microsoft.IdentityModel.Abstractions;
 using SWP.FUGoodsExchangeManagement.Business.Utils;
-using SWP.FUGoodsExchangeManagement.Repository.DTOs.CampusDTOs;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.CampusDTOs.RequestModels;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.CampusDTOs.ResponseModels;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.CampusRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.UnitOfWork;
@@ -16,11 +18,13 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.CampusServices
     {
         private readonly ICampusRepository _campusRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public CampusService(ICampusRepository campusRepository, IUnitOfWork unitOfWork)
+        public CampusService(ICampusRepository campusRepository, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _campusRepository = campusRepository;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task AddCampusAsync(AddCampusDTO addCampusDto)
@@ -76,6 +80,16 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.CampusServices
             {
                 throw new Exception("Internal Server Error");
             }
+        }
+
+        public async Task<IEnumerable<CampusResponseModel>> GetAllCampusesAsync(int pageIndex, int pageSize)
+        {
+            var campuses = await _campusRepository.Get(
+                orderBy: q => q.OrderBy(c => c.Name),
+                pageIndex: pageIndex,
+                pageSize: pageSize);
+
+            return _mapper.Map<IEnumerable<CampusResponseModel>>(campuses);
         }
     }
 }
