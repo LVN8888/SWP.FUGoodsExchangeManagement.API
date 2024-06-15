@@ -56,6 +56,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
                 refreshToken = newAccessToken.refreshToken
             };
             refreshToken.Token = newAccessToken.refreshToken;
+            refreshToken.ExpiredDate = DateTime.Now.AddDays(2);
             RefreshToken newrefreshToken = _mapper.Map<RefreshToken>(refreshToken);
             _unitOfWork.TokenRepository.Update(newrefreshToken);
             var result = await _unitOfWork.SaveChangeAsync();
