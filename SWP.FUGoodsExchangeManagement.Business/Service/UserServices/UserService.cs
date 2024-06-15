@@ -123,26 +123,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
                 throw new CustomException("User email existed!");
             }
 
-            if (!request.Email.EndsWith("@fpt.edu.vn") && !request.Email.EndsWith("@fe.edu.vn"))
-            {
-                throw new CustomException("Email is not in correct format. Please input @fpt email!");
-            }
-
-            if (request.Role.IsNullOrEmpty())
-            {
-                throw new CustomException("Please enter role");
-            }
-
-            if (!Enum.IsDefined(typeof(RoleEnums), request.Role))
-            {
-                throw new CustomException("Please enter role in correct format");
-            }
-
-            if (!Regex.Match(request.PhoneNumber, @"^\d{10,11}$").Success)
-            {
-                throw new CustomException("Phone number is not in correct format!");
-            }
-
             User newUser = _mapper.Map<User>(request);
             newUser.Id = Guid.NewGuid().ToString();
             var (salt, hash) = PasswordHasher.HashPassword(request.Password);
@@ -166,21 +146,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             if (currentUser != null)
             {
                 throw new CustomException("User email existed!");
-            }
-
-            if (!request.Email.EndsWith("@fpt.edu.vn") && !request.Email.EndsWith("@fe.edu.vn"))
-            {
-                throw new CustomException("Email is not in correct format. Please input @fpt email!");
-            }
-
-            if (!Regex.Match(request.PhoneNumber, @"^\d{10,11}$").Success)
-            {
-                throw new CustomException("Phone number is not in correct format!");
-            }
-
-            if (request.Fullname.IsNullOrEmpty())
-            {
-                throw new CustomException("Please enter your name");
             }
 
             User newUser = _mapper.Map<User>(request);
@@ -285,8 +250,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
 
         public async Task<List<UserListResponseModel>> GetUserList(int? page, string? search, string? sort, string? userRole)
         {
-            if (!string.IsNullOrEmpty(userRole) && !Enum.IsDefined(typeof(RoleEnums), userRole))
-                throw new CustomException("User role is not valid");
             if (!string.IsNullOrEmpty(sort) && !Enum.IsDefined(typeof(UserSortEnums), sort))
                 throw new CustomException("Sort value is not valid");
 
@@ -350,11 +313,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             if (existingUserWithPhoneNumber != null)
             {
                 throw new CustomException("Phone number already exists!");
-            }
-
-            if (!Enum.IsDefined(typeof(RoleEnums), request.Role))
-            {
-                throw new CustomException("Role is not valid.");
             }
 
             if (!request.Email.EndsWith("@fpt.edu.vn") && !request.Email.EndsWith("@fe.edu.vn"))
