@@ -60,5 +60,23 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteCampus(DeleteCampusDTO deleteCampusDTO)
+        {
+            try
+            {
+                await _campusService.DeleteCampusAsync(deleteCampusDTO);
+                return Ok("Campus deleted successfully");
+            }
+            catch (CustomException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

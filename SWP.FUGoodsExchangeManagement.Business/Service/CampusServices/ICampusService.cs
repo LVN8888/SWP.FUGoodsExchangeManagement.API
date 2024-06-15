@@ -11,5 +11,6 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.CampusServices
     {
         Task AddCampusAsync(AddCampusDTO addCampusDto);
         Task EditCampusAsync(EditCampusDTO editCampusDto);
+        Task DeleteCampusAsync(DeleteCampusDTO deleteCampusDTO);
     }
 }

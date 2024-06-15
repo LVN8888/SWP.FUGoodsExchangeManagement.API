@@ -63,5 +63,19 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.CampusServices
                 throw new Exception("Internal Server Error");
             }
         }
+
+        public async Task DeleteCampusAsync(DeleteCampusDTO deleteCampusDTO)
+        {
+            var campus = await _campusRepository.GetSingle(c => c.Id == deleteCampusDTO.Id);
+            if (campus == null)
+                throw new CustomException("Campus not found");
+
+            _campusRepository.Delete(campus);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
     }
 }
