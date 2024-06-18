@@ -8,7 +8,6 @@ using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Utils;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.ResponseModels;
-using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.Enums;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
@@ -20,6 +19,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.RequestModels;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.ResponseModels;
 
 namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
 {
@@ -55,6 +56,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
                 refreshToken = newAccessToken.refreshToken
             };
             refreshToken.Token = newAccessToken.refreshToken;
+            refreshToken.ExpiredDate = DateTime.Now.AddDays(2);
             RefreshToken newrefreshToken = _mapper.Map<RefreshToken>(refreshToken);
             _unitOfWork.TokenRepository.Update(newrefreshToken);
             var result = await _unitOfWork.SaveChangeAsync();
@@ -395,6 +397,20 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             if (result < 1)
             {
                 throw new Exception("Internal Server Error");
+            }
+        }
+
+        public async Task Logout(GetNewRefreshTokenDTO newRefreshToken)
+        {
+            var refreshToken = await _unitOfWork.TokenRepository.GetSingle(t => t.Token.Equals(newRefreshToken.refreshToken));
+            if (refreshToken != null)
+            {
+                _unitOfWork.TokenRepository.Delete(refreshToken);
+                var result = await _unitOfWork.SaveChangeAsync();
+                if (result < 1)
+                {
+                    throw new Exception("Internal Server Error");
+                }
             }
         }
 
