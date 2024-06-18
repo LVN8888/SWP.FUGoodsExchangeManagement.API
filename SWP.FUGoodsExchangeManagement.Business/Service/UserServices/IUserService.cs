@@ -24,5 +24,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
         Task DeactivateUser(string userId);
         Task EditUser(UserEditRequestModel request);
         Task ChangeUserRole(UserRoleChangeRequestModel request);
+        Task Logout(GetNewRefreshTokenDTO newRefreshToken);
     }
 }

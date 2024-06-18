@@ -58,5 +58,13 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             await _userService.ResetPassword(request);
             return Ok();
         }
+
+        [HttpPost]
+        [Route("logout")]
+        public async Task<IActionResult> Logout(GetNewRefreshTokenDTO newRefreshToken)
+        {
+            await _userService.Logout(newRefreshToken);
+            return Ok("Logout successful!");
+        }
     }
 }

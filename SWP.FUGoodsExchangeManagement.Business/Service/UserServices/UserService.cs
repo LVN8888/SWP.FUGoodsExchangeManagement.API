@@ -400,6 +400,20 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             }
         }
 
+        public async Task Logout(GetNewRefreshTokenDTO newRefreshToken)
+        {
+            var refreshToken = await _unitOfWork.TokenRepository.GetSingle(t => t.Token.Equals(newRefreshToken.refreshToken));
+            if (refreshToken != null)
+            {
+                _unitOfWork.TokenRepository.Delete(refreshToken);
+                var result = await _unitOfWork.SaveChangeAsync();
+                if (result < 1)
+                {
+                    throw new Exception("Internal Server Error");
+                }
+            }
+        }
+
 
     }
 }
