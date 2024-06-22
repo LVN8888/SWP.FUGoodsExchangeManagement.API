@@ -24,6 +24,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // =============================================================================================================
+builder.Configuration.AddJsonFile("appsettings.json", true, true);
 builder.Services.AddDbContext<FugoodsExchangeManagementContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
