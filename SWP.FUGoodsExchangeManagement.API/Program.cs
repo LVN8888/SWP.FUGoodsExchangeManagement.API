@@ -25,7 +25,7 @@ builder.Services.AddSwaggerGen();
 
 // =============================================================================================================
 builder.Services.AddDbContext<FugoodsExchangeManagementContext>(
-    options => options.UseSqlServer("Server=tcp:fugoodsexchange.database.windows.net,1433;Initial Catalog=FUGoodsExchangeManagement;Persist Security Info=False;User ID=fuadmin;Password=@Admin123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;")
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
