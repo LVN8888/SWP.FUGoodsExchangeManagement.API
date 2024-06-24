@@ -23,19 +23,8 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            try
-            {
-                await _campusService.AddCampusAsync(addCampusDto);
-                return Ok("Campus added successfully");
-            }
-            catch (CustomException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            await _campusService.AddCampusAsync(addCampusDto);
+            return Ok("Campus added successfully");
         }
 
         [HttpPut("edit")]
@@ -45,52 +34,22 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            try
-            {
-                await _campusService.EditCampusAsync(editCampusDto);
-                return Ok("Campus edited successfully");
-            }
-            catch (CustomException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            await _campusService.EditCampusAsync(editCampusDto);
+            return Ok("Campus edited successfully");
         }
 
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteCampus([FromBody] DeleteCampusDTO deleteCampusDTO)
         {
-            try
-            {
-                await _campusService.DeleteCampusAsync(deleteCampusDTO);
-                return Ok("Campus deleted successfully");
-            }
-            catch (CustomException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            await _campusService.DeleteCampusAsync(deleteCampusDTO);
+            return Ok("Campus deleted successfully");
         }
 
         [HttpGet("get-all")]
         public async Task<IActionResult> GetAllCampuses(int pageIndex = 1, int pageSize = 10)
         {
-            try
-            {
-                var campuses = await _campusService.GetAllCampusesAsync(pageIndex, pageSize);
-                return Ok(campuses);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var campuses = await _campusService.GetAllCampusesAsync(pageIndex, pageSize);
+            return Ok(campuses);
         }
     }
 }
