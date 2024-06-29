@@ -7,6 +7,7 @@ using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.CampusServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.OTPServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.SecretServices;
 using SWP.FUGoodsExchangeManagement.Repository.Mappers;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.CampusRepositories;
@@ -28,7 +29,7 @@ builder.Services.AddSwaggerGen();
 
 // =============================================================================================================
 builder.Services.AddDbContext<FugoodsExchangeManagementContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+    options => options.UseSqlServer(SecretService.ConnectionString)
 );
 
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
