@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.Service.UserServices;
@@ -57,6 +57,14 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         {
             await _userService.ResetPassword(request);
             return Ok();
+        }
+
+        [HttpPost]
+        [Route("logout")]
+        public async Task<IActionResult> Logout(GetNewRefreshTokenDTO newRefreshToken)
+        {
+            await _userService.Logout(newRefreshToken);
+            return Ok("Logout successful!");
         }
     }
 }

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs
+namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.ResponseModels
 {
     public class NewRefreshTokenResponseModel
     {
         public string accessToken { get; set; } = null!;
-        public string refreshToken { get; set;} = null!;
+        public string refreshToken { get; set; } = null!;
     }
 }

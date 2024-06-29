@@ -4,10 +4,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SWP.FUGoodsExchangeManagement.API.Middleware;
 using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.CampusServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.OTPServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.SecretServices;
 using SWP.FUGoodsExchangeManagement.Repository.Mappers;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.CampusRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.CategoryRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.TokenRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
@@ -25,7 +29,7 @@ builder.Services.AddSwaggerGen();
 
 // =============================================================================================================
 builder.Services.AddDbContext<FugoodsExchangeManagementContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+    options => options.UseSqlServer(SecretService.ConnectionString)
 );
 
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
@@ -36,11 +40,14 @@ builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMailService, MailService>();
-builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IOTPService, OTPService>();
+builder.Services.AddScoped<ICampusService, CampusService>();
+builder.Services.AddScoped<ICampusRepository, CampusRepository>();
 
+builder.Services.AddTransient<ITokenRepository, TokenRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IOTPRepository, OTPRepository>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddCors(options =>
 {
