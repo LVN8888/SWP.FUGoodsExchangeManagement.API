@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.CampusDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.CampusDTOs.ResponseModels;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.CategoryDTOs.ResponseModel;
 
 namespace SWP.FUGoodsExchangeManagement.Repository.Mappers
 {
@@ -27,6 +28,8 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Mappers
             CreateMap<AddCampusDTO, Campus>();
             CreateMap<EditCampusDTO, Campus>();
             CreateMap<DeleteCampusDTO, Campus>();
+
+            CreateMap<Category, CategoryResponseModel>();
         }
     }
 }
