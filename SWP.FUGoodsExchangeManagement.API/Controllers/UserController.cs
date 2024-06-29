@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SWP.FUGoodsExchangeManagement.Business.Service.UserServices;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.RequestModels;
-using SWP.FUGoodsExchangeManagement.Repository.Service.UserServices;
 
 namespace SWP.FUGoodsExchangeManagement.API.Controllers
 {

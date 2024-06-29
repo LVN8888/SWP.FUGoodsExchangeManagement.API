@@ -22,7 +22,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.ResponseModels;
 
-namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
+namespace SWP.FUGoodsExchangeManagement.Business.Service.UserServices
 {
     public class UserService : IUserService
     {
@@ -296,9 +296,9 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
 
             var qr = await _unitOfWork.UserRepository.Get(pageIndex: page ?? 0,
                                                           pageSize: UserPerPage,
-                                                          filter: (u => (u.Fullname.Contains(searchUnsign) || u.Email.Contains(searchUnsign)) &&
+                                                          filter: u => (u.Fullname.Contains(searchUnsign) || u.Email.Contains(searchUnsign)) &&
                                                                         (string.IsNullOrEmpty(userRole) || u.Role.Equals(userRole))
-                                                                  ),
+                                                                  ,
                                                           orderBy: GetOrderQuery(sort)
                                                          );
             return _mapper.Map<List<UserListResponseModel>>(qr);

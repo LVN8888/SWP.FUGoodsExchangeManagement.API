@@ -9,6 +9,7 @@ using SWP.FUGoodsExchangeManagement.Business.Service.CategoryServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.OTPServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.SecretServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.UserServices;
 using SWP.FUGoodsExchangeManagement.Repository.Mappers;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.CampusRepositories;
@@ -16,7 +17,6 @@ using SWP.FUGoodsExchangeManagement.Repository.Repository.CategoryRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.TokenRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
-using SWP.FUGoodsExchangeManagement.Repository.Service.UserServices;
 using SWP.FUGoodsExchangeManagement.Repository.UnitOfWork;
 using System.Text;
 
