@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.ResponseModels;
 
-namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
+namespace SWP.FUGoodsExchangeManagement.Business.Service.UserServices
 {
     public interface IUserService
     {
