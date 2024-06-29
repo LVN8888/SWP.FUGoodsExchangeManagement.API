@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using SWP.FUGoodsExchangeManagement.API.Middleware;
 using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.CampusServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.CategoryServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.OTPServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.SecretServices;
@@ -38,16 +39,17 @@ builder.Services.AddSingleton<GlobalExceptionMiddleware>();
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMailService, MailService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOTPService, OTPService>();
 builder.Services.AddScoped<ICampusService, CampusService>();
-builder.Services.AddScoped<ICampusRepository, CampusRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
-builder.Services.AddTransient<ITokenRepository, TokenRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<ITokenRepository, TokenRepository>();
 builder.Services.AddTransient<IOTPRepository, OTPRepository>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+builder.Services.AddTransient<ICampusRepository, CampusRepository>();
 
 builder.Services.AddCors(options =>
 {
