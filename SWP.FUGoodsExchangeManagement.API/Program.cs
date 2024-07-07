@@ -9,6 +9,7 @@ using SWP.FUGoodsExchangeManagement.Business.Service.CategoryServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.OTPServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.SecretServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.StatisticalServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.UserServices;
 using SWP.FUGoodsExchangeManagement.Repository.Mappers;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
@@ -44,6 +45,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOTPService, OTPService>();
 builder.Services.AddScoped<ICampusService, CampusService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IStatisticalService, StatisticalService>();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ITokenRepository, TokenRepository>();
