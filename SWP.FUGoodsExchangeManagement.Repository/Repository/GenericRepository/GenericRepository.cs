@@ -88,6 +88,12 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.GenericRepository
             await dbSet.AddAsync(entity);
         }
 
+        public async Task InsertRange(List<TEntity> entities)
+        {
+            await dbSet.AddRangeAsync(entities);
+            await context.SaveChangesAsync();
+        }
+
         public virtual async Task Delete(object id)
         {
             TEntity entityToDelete = await dbSet.FindAsync(id);
@@ -120,6 +126,17 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.GenericRepository
             return await query.CountAsync();
         }
 
+        public async Task UpdateRange(List<TEntity> entities)
+        {
+            dbSet.UpdateRange(entities);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task DeleteRange(List<TEntity> entities)
+        {
+            dbSet.RemoveRange(entities);
+            await context.SaveChangesAsync();
+        }
     }
 }
  

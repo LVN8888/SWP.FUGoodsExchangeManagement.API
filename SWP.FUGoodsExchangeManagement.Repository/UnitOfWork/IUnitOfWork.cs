@@ -1,6 +1,9 @@
 ﻿using SWP.FUGoodsExchangeManagement.Repository.Repository.CategoryRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.PaymentRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.PostModeRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.ProductImagesRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.ProductPostRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.TokenRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
 using System;
@@ -19,5 +22,8 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
         ITokenRepository TokenRepository { get; }
         IPostModeRepository PostModeRepository { get; }
         ICategoryRepository CategoryRepository { get; }
+        IProductImagesRepository ProductImagesRepository { get; }
+        IProductPostRepository ProductPostRepository { get; }
+        IPaymentRepository PaymentRepository { get; }
     }
 }

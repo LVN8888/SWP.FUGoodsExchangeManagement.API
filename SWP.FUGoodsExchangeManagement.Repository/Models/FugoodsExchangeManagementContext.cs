@@ -6,10 +6,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Models;
 
 public partial class FugoodsExchangeManagementContext : DbContext
 {
-    public FugoodsExchangeManagementContext()
-    {
-    }
-
     public FugoodsExchangeManagementContext(DbContextOptions<FugoodsExchangeManagementContext> options)
         : base(options)
     {
@@ -71,7 +67,7 @@ public partial class FugoodsExchangeManagementContext : DbContext
 
         modelBuilder.Entity<Chat>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Chat__3214EC07B05F584A");
+            entity.HasKey(e => e.Id).HasName("PK__Chat__3214EC075076337A");
 
             entity.ToTable("Chat");
 
@@ -154,7 +150,7 @@ public partial class FugoodsExchangeManagementContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC07932325D9");
+            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC07C288C725");
 
             entity.ToTable("Payment");
 
@@ -178,6 +174,9 @@ public partial class FugoodsExchangeManagementContext : DbContext
                 .HasMaxLength(36)
                 .IsUnicode(false)
                 .IsFixedLength();
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.PostMode).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.PostModeId)
@@ -192,7 +191,7 @@ public partial class FugoodsExchangeManagementContext : DbContext
 
         modelBuilder.Entity<PostApply>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PostAppl__3214EC07C8B7431B");
+            entity.HasKey(e => e.Id).HasName("PK__PostAppl__3214EC077905E255");
 
             entity.ToTable("PostApply");
 
@@ -248,7 +247,7 @@ public partial class FugoodsExchangeManagementContext : DbContext
 
         modelBuilder.Entity<ProductImage>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ProductI__3214EC070D7C26E6");
+            entity.HasKey(e => e.Id).HasName("PK__ProductI__3214EC0769A3DC28");
 
             entity.HasIndex(e => e.ProductPostId, "idx_productimages_productpostid");
 
@@ -296,12 +295,16 @@ public partial class FugoodsExchangeManagementContext : DbContext
                 .HasMaxLength(36)
                 .IsUnicode(false)
                 .IsFixedLength();
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.Description).HasMaxLength(2048);
             entity.Property(e => e.ExpiredDate).HasColumnType("datetime");
             entity.Property(e => e.PostModeId)
                 .HasMaxLength(36)
                 .IsUnicode(false)
                 .IsFixedLength();
+            entity.Property(e => e.Price)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .IsUnicode(false);
