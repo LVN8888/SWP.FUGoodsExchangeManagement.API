@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.StatisticalDTOs
+namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.StatisticalDTOs.ResponseModels
 {
-    public class SummaryDTO
+    public class SummaryResponseModel
     {
         public int TotalUsers { get; set; }
         public int TotalPosts { get; set; }

@@ -1,4 +1,5 @@
-﻿using SWP.FUGoodsExchangeManagement.Repository.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.CampusRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.CategoryRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
@@ -8,6 +9,7 @@ using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,6 +38,8 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
             _oTPRepository = oTPRepository;
             _tokenRepository = tokenRepository;
             _categoryRepository = categoryRepository;
+            _campusRepository = campusRepository;
+            _reportRepository = reportRepository;
         }
 
         public async Task<int> SaveChangeAsync()

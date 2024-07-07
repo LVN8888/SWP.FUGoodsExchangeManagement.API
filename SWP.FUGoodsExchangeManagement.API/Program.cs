@@ -8,6 +8,7 @@ using SWP.FUGoodsExchangeManagement.Business.Service.CampusServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.CategoryServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.OTPServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.ReportServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.SecretServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.StatisticalServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.UserServices;
@@ -16,6 +17,7 @@ using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.CampusRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.CategoryRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.ReportRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.TokenRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.UnitOfWork;
@@ -46,12 +48,14 @@ builder.Services.AddScoped<IOTPService, OTPService>();
 builder.Services.AddScoped<ICampusService, CampusService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IStatisticalService, StatisticalService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ITokenRepository, TokenRepository>();
 builder.Services.AddTransient<IOTPRepository, OTPRepository>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ICampusRepository, CampusRepository>();
+builder.Services.AddTransient<IReportRepository, ReportRepository>();
 
 builder.Services.AddCors(options =>
 {

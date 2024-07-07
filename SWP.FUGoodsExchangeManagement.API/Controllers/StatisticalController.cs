@@ -17,8 +17,7 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         [HttpGet("summary")]
         public async Task<IActionResult> GetSummaryAsync()
         {
-            var summary = await _statisticalService.GetSummaryAsync();
-            return Ok(summary);
+            return Ok(await _statisticalService.GetSummaryAsync());
         }
     }
 }

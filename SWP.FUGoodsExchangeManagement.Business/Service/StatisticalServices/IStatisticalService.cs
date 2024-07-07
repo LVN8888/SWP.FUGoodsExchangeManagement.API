@@ -1,4 +1,4 @@
-﻿using SWP.FUGoodsExchangeManagement.Repository.DTOs.StatisticalDTOs;
+﻿using SWP.FUGoodsExchangeManagement.Repository.DTOs.StatisticalDTOs.ResponseModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,6 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.StatisticalServices
 {
     public interface IStatisticalService
     {
-        Task<SummaryDTO> GetSummaryAsync();
+        Task<SummaryResponseModel> GetSummaryAsync();
     }
 }
