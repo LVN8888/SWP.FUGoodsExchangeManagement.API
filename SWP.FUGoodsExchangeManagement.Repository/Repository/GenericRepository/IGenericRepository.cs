@@ -26,5 +26,8 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.GenericRepository
         Task Delete(TEntity entityToDelete);
         void Update(TEntity entityToUpdate);
         Task<int> Count(Expression<Func<TEntity, bool>> filter = null);
+        Task InsertRange(List<TEntity> entities);
+        Task UpdateRange(List<TEntity> entities);
+        Task DeleteRange(List<TEntity> entities);
     }
 }
