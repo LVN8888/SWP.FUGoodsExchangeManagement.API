@@ -1,4 +1,5 @@
 ﻿using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.PostModeRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.TokenRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
 using System;
@@ -11,9 +12,10 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
 {
     public interface IUnitOfWork
     {
-        public Task<int> SaveChangeAsync();
-        public IUserRepository UserRepository { get; }
-        public IOTPRepository OTPRepository { get; }       
-        public ITokenRepository TokenRepository { get; }
+        Task<int> SaveChangeAsync();
+        IUserRepository UserRepository { get; }
+        IOTPRepository OTPRepository { get; }
+        ITokenRepository TokenRepository { get; }
+        IPostModeRepository PostModeRepository { get; }
     }
 }

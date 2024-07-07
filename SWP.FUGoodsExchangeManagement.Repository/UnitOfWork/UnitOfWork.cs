@@ -1,5 +1,7 @@
 ﻿using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.PostModeRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.ProductPostRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.TokenRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
 using System;
@@ -16,13 +18,18 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
         private readonly IUserRepository _userRepository;
         private readonly IOTPRepository _oTPRepository;
         private readonly ITokenRepository _tokenRepository;
+        private readonly IPostModeRepository _postModeRepository;
+        private readonly IProductPostRepository _productPostRepository;
 
-        public UnitOfWork(FugoodsExchangeManagementContext context, IUserRepository userRepository, IOTPRepository oTPRepository, ITokenRepository tokenRepository)
+        public UnitOfWork(FugoodsExchangeManagementContext context, IUserRepository userRepository, IOTPRepository oTPRepository, ITokenRepository tokenRepository, 
+            IPostModeRepository postModeRepository, IProductPostRepository productPostRepository)
         {
             _context = context;
             _userRepository = userRepository;
             _oTPRepository = oTPRepository;
             _tokenRepository = tokenRepository;
+            _postModeRepository = postModeRepository;
+            _productPostRepository = productPostRepository;
         }
 
         public async Task<int> SaveChangeAsync()
@@ -33,5 +40,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
         public IUserRepository UserRepository => _userRepository;
         public IOTPRepository OTPRepository => _oTPRepository;
         public ITokenRepository TokenRepository => _tokenRepository;
+        public IPostModeRepository PostModeRepository => _postModeRepository;
+        public IProductPostRepository ProductPostRepository => _productPostRepository;
     }
 }

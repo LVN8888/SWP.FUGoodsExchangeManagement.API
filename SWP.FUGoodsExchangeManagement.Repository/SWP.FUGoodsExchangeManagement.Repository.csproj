@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\ProductPostDTOs\" />
+    <Folder Include="DTOs\ProductPostDTOs\ResponseModels\" />
   </ItemGroup>
 
 </Project>
