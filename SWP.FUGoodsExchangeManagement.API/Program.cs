@@ -30,7 +30,7 @@ builder.Services.AddSwaggerGen();
 
 // =============================================================================================================
 builder.Services.AddDbContext<FugoodsExchangeManagementContext>(
-    options => options.UseSqlServer(SecretService.ConnectionString)
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
