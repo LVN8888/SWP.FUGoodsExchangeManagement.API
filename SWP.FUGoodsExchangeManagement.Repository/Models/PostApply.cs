@@ -7,7 +7,7 @@ public partial class PostApply
 {
     public string Id { get; set; } = null!;
 
-    public string Message { get; set; } = null!;
+    public string? Message { get; set; }
 
     public string ProductPostId { get; set; } = null!;
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using SWP.FUGoodsExchangeManagement.Repository.Enums;
+using SWP.FUGoodsExchangeManagement.Business.Utils.CustomDataAnnotation;
 
 namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.RequestModels
 {
@@ -19,7 +20,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.UserDTOs.RequestModels
         public string Fullname { get; set; }
 
         [Required]
-        [EmailAddress]
+        [FPTEmail]
         public string Email { get; set; }
 
         [StringLength(15)]
