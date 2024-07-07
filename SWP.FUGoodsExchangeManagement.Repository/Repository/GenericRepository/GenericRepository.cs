@@ -88,20 +88,20 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.GenericRepository
             await dbSet.AddAsync(entity);
         }
 
-        //public virtual async Task Delete(object id)
-        //{
-        //    TEntity entityToDelete = await dbSet.FindAsync(id);
-        //    Delete(entityToDelete);
-        //}
+        public virtual async Task Delete(object id)
+        {
+            TEntity entityToDelete = await dbSet.FindAsync(id);
+            Delete(entityToDelete);
+        }
 
-        //private void Delete(TEntity entityToDelete)
-        //{
-        //    if (context.Entry(entityToDelete).State == EntityState.Detached)
-        //    {
-        //        dbSet.Attach(entityToDelete);
-        //    }
-        //    dbSet.Remove(entityToDelete);
-        //}
+        public virtual async Task Delete(TEntity entityToDelete)
+        {
+            if (context.Entry(entityToDelete).State == EntityState.Detached)
+            {
+                dbSet.Attach(entityToDelete);
+            }
+            dbSet.Remove(entityToDelete);
+        }
 
         public virtual void Update(TEntity entityToUpdate)
         {

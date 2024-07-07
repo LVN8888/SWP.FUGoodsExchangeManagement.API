@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs
+namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.RequestModels
 {
     public class RefreshTokenDTO
     {
