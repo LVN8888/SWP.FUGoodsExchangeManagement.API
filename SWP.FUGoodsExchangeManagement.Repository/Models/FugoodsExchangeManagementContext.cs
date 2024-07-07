@@ -207,9 +207,7 @@ public partial class FugoodsExchangeManagementContext : DbContext
                 .HasMaxLength(36)
                 .IsUnicode(false)
                 .IsFixedLength();
-            entity.Property(e => e.Message)
-                .HasMaxLength(500)
-                .IsUnicode(false);
+            entity.Property(e => e.Message).HasMaxLength(500);
             entity.Property(e => e.ProductPostId)
                 .HasMaxLength(36)
                 .IsUnicode(false)

@@ -8,6 +8,7 @@ using SWP.FUGoodsExchangeManagement.Business.Service.CampusServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.CategoryServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.OTPServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.PostModeServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.SecretServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.UserServices;
@@ -17,6 +18,7 @@ using SWP.FUGoodsExchangeManagement.Repository.Repository.CampusRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.CategoryRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.PaymentRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.PostApplyRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.PostModeRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.ProductImagesRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.ProductPostRepositories;
@@ -51,6 +53,7 @@ builder.Services.AddScoped<IOTPService, OTPService>();
 builder.Services.AddScoped<ICampusService, CampusService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductPostService, ProductPostService>();
+builder.Services.AddScoped<IPostModeService, PostModeService>();
 
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
@@ -62,6 +65,7 @@ builder.Services.AddTransient<IProductImagesRepository, ProductImagesRepository>
 builder.Services.AddTransient<IProductPostRepository, ProductPostRepository>();
 builder.Services.AddTransient<IPaymentRepository, PaymentRepository>();
 builder.Services.AddTransient<IPostModeRepository, PostModeRepository>();
+builder.Services.AddTransient<IPostApplyRepository, PostApplyRepository>();
 
 
 builder.Services.AddCors(options =>

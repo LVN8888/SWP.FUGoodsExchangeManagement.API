@@ -65,8 +65,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                 });
             }
             await _unitOfWork.ProductImagesRepository.InsertRange(postImages);
-
-
+            await _unitOfWork.SaveChangeAsync();
         }
 
         public async Task<List<ProductPostResponseModel>> ViewAllPostWithStatus(int? pageIndex, PostSearchModel searchModel, string status)
@@ -154,6 +153,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                 }
                 await _unitOfWork.ProductImagesRepository.InsertRange(addImageList);
             }
+            await _unitOfWork.SaveChangeAsync();
         }
 
         public async Task ExtendExpiredDate(string id, string postModeId, string token)
@@ -185,6 +185,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
             chosenPost.ExpiredDate = DateTime.Now.AddDays(int.Parse(chosenPostMode.Duration));
             chosenPost.PostModeId = postModeId;
             _unitOfWork.ProductPostRepository.Update(chosenPost);
+            await _unitOfWork.SaveChangeAsync();
         }
 
         public async Task ApprovePost(string status, string id)
@@ -211,6 +212,19 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                 chosenPost.ExpiredDate = DateTime.Now.AddDays(int.Parse(postMode.Duration));
             }
             _unitOfWork.ProductPostRepository.Update(chosenPost);
+            await _unitOfWork.SaveChangeAsync();
+        }
+
+        public async Task CloseProductPost(string id)
+        {
+            var chosenPost = await _unitOfWork.ProductPostRepository.GetSingle(p => p.Id.Equals(id));
+            if (chosenPost == null)
+            {
+                throw new CustomException("The chosen post is not existed");
+            }
+            chosenPost.Status = ProductPostStatus.Closed.ToString();
+            _unitOfWork.ProductPostRepository.Update(chosenPost);
+            await _unitOfWork.SaveChangeAsync();
         }
 
         private async Task<List<ProductPostResponseModel>> ViewAllPostWithStatus(int? pageIndex, string status, PostSearchModel searchModel, string token, int option)

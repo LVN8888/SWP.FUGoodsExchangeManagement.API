@@ -62,6 +62,15 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             return Ok(response);
         }
 
+        [HttpPost]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> CreateProductPost(ProductPostCreateRequestModel requestModel)
+        {
+            string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
+            await _productPostService.CreateWaitingProductPost(requestModel, token);
+            return Ok("Create post successfully. Please wait for moderator approving your post");
+        }
+
         [HttpPut]
         [Route("{id}")]
         [Authorize(Roles = "User")]
@@ -72,6 +81,15 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         }
 
         [HttpPut]
+        [Route("close/{id}")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> CloseProductPost(string id)
+        {
+            await _productPostService.CloseProductPost(id);
+            return Ok("Close product post successfully");
+        }
+
+        [HttpPut]
         [Route("extend/{id}")]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> ExtendProductPost(string id, [FromBody] string postModeId)
@@ -79,15 +97,6 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             var token = Request.Headers["Authorization"].ToString().Split(" ")[1];
             await _productPostService.ExtendExpiredDate(id, postModeId, token);
             return Ok("Update successfully");
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> CreateProductPost(ProductPostCreateRequestModel requestModel)
-        {
-            string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
-            await _productPostService.CreateWaitingProductPost(requestModel, token);
-            return Ok("Create post successfully. Please wait for moderator approving your post");
         }
 
         [HttpPut]
