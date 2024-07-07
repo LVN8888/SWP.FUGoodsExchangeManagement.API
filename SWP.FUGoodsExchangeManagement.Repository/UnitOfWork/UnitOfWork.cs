@@ -1,4 +1,5 @@
 ﻿using SWP.FUGoodsExchangeManagement.Repository.Models;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.CategoryRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.PostModeRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.ProductPostRepositories;
@@ -20,9 +21,15 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
         private readonly ITokenRepository _tokenRepository;
         private readonly IPostModeRepository _postModeRepository;
         private readonly IProductPostRepository _productPostRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
         public UnitOfWork(FugoodsExchangeManagementContext context, IUserRepository userRepository, IOTPRepository oTPRepository, ITokenRepository tokenRepository, 
             IPostModeRepository postModeRepository, IProductPostRepository productPostRepository)
+        public UnitOfWork(FugoodsExchangeManagementContext context, 
+            IUserRepository userRepository, 
+            IOTPRepository oTPRepository, 
+            ITokenRepository tokenRepository,
+            ICategoryRepository categoryRepository)
         {
             _context = context;
             _userRepository = userRepository;
@@ -30,6 +37,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
             _tokenRepository = tokenRepository;
             _postModeRepository = postModeRepository;
             _productPostRepository = productPostRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<int> SaveChangeAsync()
@@ -42,5 +50,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
         public ITokenRepository TokenRepository => _tokenRepository;
         public IPostModeRepository PostModeRepository => _postModeRepository;
         public IProductPostRepository ProductPostRepository => _productPostRepository;
+        public ICategoryRepository CategoryRepository => _categoryRepository;
     }
 }

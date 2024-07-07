@@ -1,4 +1,5 @@
-﻿using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
+﻿using SWP.FUGoodsExchangeManagement.Repository.Repository.CategoryRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.PostModeRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.TokenRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
@@ -17,5 +18,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
         IOTPRepository OTPRepository { get; }
         ITokenRepository TokenRepository { get; }
         IPostModeRepository PostModeRepository { get; }
+        ICategoryRepository CategoryRepository { get; }
     }
 }
