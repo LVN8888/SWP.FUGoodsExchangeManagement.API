@@ -19,5 +19,6 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
         Task UpdateProductPost(string id, ProductPostUpdateRequestModel requestModel);
         Task ExtendExpiredDate(string id, string postModeId, string token);
         Task CloseProductPost(string id);
+        Task ExtendExpiredDateAfterPaymentSuccess(string id, string postModeId);
     }
 }

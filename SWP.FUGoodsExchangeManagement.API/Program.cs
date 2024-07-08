@@ -8,6 +8,7 @@ using SWP.FUGoodsExchangeManagement.Business.Service.CampusServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.CategoryServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.OTPServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.PaymentServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.PostModeServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.ReportServices;
@@ -59,6 +60,7 @@ builder.Services.AddScoped<IProductPostService, ProductPostService>();
 builder.Services.AddScoped<IPostModeService, PostModeService>();
 builder.Services.AddScoped<IStatisticalService, StatisticalService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ITokenRepository, TokenRepository>();
