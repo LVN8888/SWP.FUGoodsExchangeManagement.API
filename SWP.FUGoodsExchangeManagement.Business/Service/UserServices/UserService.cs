@@ -305,28 +305,14 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.UserServices
             if (user == null)
             {
                 throw new CustomException("User not found!");
-            }
-            var existingUserWithEmail = await _unitOfWork.UserRepository.GetSingle(u => u.Email.Equals(request.Email) && !u.Id.Equals(request.Id));
-            if (existingUserWithEmail != null)
-            {
-                throw new CustomException("Email already exists!");
-            }
+            }           
             var existingUserWithPhoneNumber = await _unitOfWork.UserRepository.GetSingle(u => u.PhoneNumber.Equals(request.PhoneNumber) && !u.Id.Equals(request.Id));
             if (existingUserWithPhoneNumber != null)
             {
                 throw new CustomException("Phone number already exists!");
-            }
-
-            if (!request.Email.EndsWith("@fpt.edu.vn") && !request.Email.EndsWith("@fe.edu.vn"))
-            {
-                throw new CustomException("Email is not in correct format. Please input @fpt email!");
-            }
-
+            }          
             user.Fullname = request.Fullname;
-            user.Email = request.Email;
             user.PhoneNumber = request.PhoneNumber;
-            user.Role = request.Role;
-
             _unitOfWork.UserRepository.Update(user);
             var result = await _unitOfWork.SaveChangeAsync();
             if (result < 1)
