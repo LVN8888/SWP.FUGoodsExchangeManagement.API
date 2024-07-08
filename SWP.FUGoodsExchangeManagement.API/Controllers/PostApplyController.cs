@@ -16,6 +16,15 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             _postApplyService = postApplyService;
         }
 
+        [HttpGet]
+        [Route("{postId}")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> ViewAllPostApply(string postId, int? pageIndex)
+        {
+            var response = await _postApplyService.GetApplyOfPost(postId, pageIndex);
+            return Ok(response);
+        }
+
         [HttpPost]
         [Authorize(Roles = "User")]
         [Route("{postId}")]
