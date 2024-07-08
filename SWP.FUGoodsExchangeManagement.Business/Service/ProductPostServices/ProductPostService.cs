@@ -314,5 +314,28 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
             }).ToList();
             return responseList;
         }
+
+        public async Task ExtendExpiredDateAfterPaymentSuccess(string id, string postModeId)
+        {
+            var chosenPost = await _unitOfWork.ProductPostRepository.GetSingle(p => p.Id.Equals(id));
+            if (chosenPost == null)
+            {
+                throw new CustomException("The chosen post is not existed");
+            }
+
+            if (!chosenPost.Status.Equals(ProductPostStatus.Expired.ToString()))
+            {
+                throw new CustomException("The chosen post cannot be extended");
+            }
+
+            var chosenPostMode = await _unitOfWork.PostModeRepository.GetSingle(p => p.Id.Equals(postModeId));
+            
+            chosenPost.ExpiredDate = DateTime.Now.AddDays(int.Parse(chosenPostMode.Duration));
+            chosenPost.PostModeId = postModeId;
+            chosenPost.Status = ProductPostStatus.Open.ToString();
+
+            _unitOfWork.ProductPostRepository.Update(chosenPost);
+            await _unitOfWork.SaveChangeAsync();
+        }
     }
 }
