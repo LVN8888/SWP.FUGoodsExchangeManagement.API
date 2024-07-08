@@ -17,6 +17,7 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserList([FromQuery] int? page,
                                                      [FromQuery] string? search,
                                                      [FromQuery] string? sort,
@@ -24,6 +25,15 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         {
             var list = await _userService.GetUserList(page, search, sort, userRole);
             return Ok(list);
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetUserDetailsInfo(string id)
+        {
+            var response = await _userService.GetDetailsOfUser(id);
+            return Ok(response);
         }
 
         [Authorize(Roles = "User, Admin")]
@@ -51,7 +61,7 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         public async Task<IActionResult> DeactivateUser(string userId)
         {
             await _userService.DeactivateUser(userId);
-            return Ok( new { message = "User deactivated successfully" });
+            return Ok(new { message = "User deactivated successfully" });
         }
 
         [Authorize(Roles = "Admin")]
@@ -65,7 +75,7 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             }
 
             await _userService.EditUser(request);
-            return Ok( new { message = "User details updated successfully" });
+            return Ok(new { message = "User details updated successfully" });
         }
 
         [Authorize(Roles = "Admin")]

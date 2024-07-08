@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace SWP.FUGoodsExchangeManagement.Repository.Enums
 {
-    public enum PaymentStatus
+    public enum PostModeStatus
     {
-        Pending,
-        Success,
-        Error
+        Active, 
+        Inactive
     }
 }

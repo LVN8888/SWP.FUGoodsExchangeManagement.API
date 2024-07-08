@@ -17,6 +17,15 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             _productPostService = productPostService;
         }
 
+        [HttpPost]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> CreateProductPost(ProductPostCreateRequestModel requestModel)
+        {
+            string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
+            await _productPostService.CreateWaitingProductPost(requestModel, token);
+            return Ok("Create post successfully. Please wait for moderator approving your post");
+        }
+
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = "Admin, Moderator")]
@@ -60,15 +69,6 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         {
             var response = await _productPostService.ViewDetailsOfPost(id);
             return Ok(response);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> CreateProductPost(ProductPostCreateRequestModel requestModel)
-        {
-            string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
-            await _productPostService.CreateWaitingProductPost(requestModel, token);
-            return Ok("Create post successfully. Please wait for moderator approving your post");
         }
 
         [HttpPut]

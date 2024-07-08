@@ -182,9 +182,6 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                 Status = PaymentStatus.Pending.ToString(),
             };
             await _unitOfWork.PaymentRepository.Insert(newPayment);
-            chosenPost.ExpiredDate = DateTime.Now.AddDays(int.Parse(chosenPostMode.Duration));
-            chosenPost.PostModeId = postModeId;
-            _unitOfWork.ProductPostRepository.Update(chosenPost);
             await _unitOfWork.SaveChangeAsync();
         }
 
@@ -237,17 +234,18 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
             Func<IQueryable<ProductPost>, IOrderedQueryable<ProductPost>> orderBy;
             orderBy = o => o.OrderBy(p => p.Price).ThenBy(p => p.CreatedDate);
             Expression<Func<ProductPost, bool>> filter;
-            if (status.IsNullOrEmpty())
+            if (!status.IsNullOrEmpty())
             {
-                throw new CustomException("Please choose status");
+                if (!Enum.GetNames(typeof(ProductPostStatus)).Contains(status))
+                {
+                    throw new CustomException("Please input valid status");
+                }
+                filter = p => p.Status.Equals(status);
             }
-
-            if (!Enum.GetNames(typeof(ProductPostStatus)).Contains(status))
+            else
             {
-                throw new CustomException("Please input valid status");
+                filter = null;
             }
-
-            filter = p => p.Status.Equals(status);
 
             if (userId != null && option == 1)
             {
@@ -316,6 +314,29 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                 ImageUrls = allImages.Where(ai => ai.ProductPostId.Equals(a.Id)).Select(ai => ai.Url).ToList(),
             }).ToList();
             return responseList;
+        }
+
+        public async Task ExtendExpiredDateAfterPaymentSuccess(string id, string postModeId)
+        {
+            var chosenPost = await _unitOfWork.ProductPostRepository.GetSingle(p => p.Id.Equals(id));
+            if (chosenPost == null)
+            {
+                throw new CustomException("The chosen post is not existed");
+            }
+
+            if (!chosenPost.Status.Equals(ProductPostStatus.Expired.ToString()))
+            {
+                throw new CustomException("The chosen post cannot be extended");
+            }
+
+            var chosenPostMode = await _unitOfWork.PostModeRepository.GetSingle(p => p.Id.Equals(postModeId));
+
+            chosenPost.ExpiredDate = DateTime.Now.AddDays(int.Parse(chosenPostMode.Duration));
+            chosenPost.PostModeId = postModeId;
+            chosenPost.Status = ProductPostStatus.Open.ToString();
+
+            _unitOfWork.ProductPostRepository.Update(chosenPost);
+            await _unitOfWork.SaveChangeAsync();
         }
     }
 }

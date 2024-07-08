@@ -12,7 +12,9 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.PostModeServices
     public interface IPostModeService
     {
         Task AddPostMode(PostModeAddRequestModel requestModel);
-        Task<List<PostModeListModel>> ShowPostModeList();
-        Task UpdatePostMode(PostModeUpdateModel requestModel);
+        Task<List<PostModeListModel>> ShowPostModeListForUser();
+        Task<List<PostModeListModel>> ShowPostModeListForAdmin();
+        Task UpdatePostMode(string id, PostModeUpdateModel requestModel);
+        Task SoftRemovePostMode(string id);
     }
 }

@@ -350,14 +350,21 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.UserServices
             if (refreshToken != null)
             {
                 _unitOfWork.TokenRepository.Delete(refreshToken);
-                var result = await _unitOfWork.SaveChangeAsync();
-                if (result < 1)
-                {
-                    throw new Exception("Internal Server Error");
-                }
+                await _unitOfWork.SaveChangeAsync();
+
             }
         }
 
+        public async Task<UserResponseModel> GetDetailsOfUser(string id)
+        {
+            var user = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(id));
+            if (user == null)
+            {
+                throw new CustomException("User is not existed");
+            }
+            var response = _mapper.Map<UserResponseModel>(user);
+            return response;
+        }
 
     }
 }
