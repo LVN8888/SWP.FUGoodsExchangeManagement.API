@@ -13,6 +13,8 @@ public partial class PostMode
 
     public string Price { get; set; } = null!;
 
+    public string Status { get; set; } = null!;
+
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual ICollection<ProductPost> ProductPosts { get; set; } = new List<ProductPost>();

@@ -25,5 +25,6 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.UserServices
         Task EditUser(UserEditRequestModel request);
         Task ChangeUserRole(UserRoleChangeRequestModel request);
         Task Logout(GetNewRefreshTokenDTO newRefreshToken);
+        Task<UserResponseModel> GetDetailsOfUser(string id);
     }
 }

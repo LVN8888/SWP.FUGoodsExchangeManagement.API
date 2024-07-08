@@ -25,6 +25,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Mappers
             CreateMap<UserRegisterRequestModelVer1, User>();
             CreateMap<RefreshToken, GetNewRefreshTokenDTO>();
             CreateMap<User, UserListResponseModel>();
+            CreateMap<User, UserResponseModel>();
             //Campus
             CreateMap<Campus, CampusResponseModel>();
             CreateMap<AddCampusDTO, Campus>();
