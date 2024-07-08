@@ -1,5 +1,6 @@
 ﻿using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
 using SWP.FUGoodsExchangeManagement.Business.Utils;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.PostApplyDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.Enums;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.UnitOfWork;
@@ -56,6 +57,23 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.PostApplyServices
                 await _unitOfWork.SaveChangeAsync();
             }
             else throw new CustomException("This apply post is not existed");
+        }
+
+        public async Task<List<PostApplyResponseModel>> GetApplyOfPost(string postId, int? pageIndex)
+        {
+            var applyList = await _unitOfWork.PostApplyRepository.Get(p => p.ProductPostId.Equals(postId), null, includeProperties: "Buyer", pageIndex ?? 1, 5);
+            return applyList.Select(a => new PostApplyResponseModel
+            {
+                Id = a.Id,
+                Message = a.Message ?? null,
+                BuyerInfo = new BuyerInfo
+                {
+                    Id = a.BuyerId,
+                    Email = a.Buyer.Email,
+                    Name = a.Buyer.Fullname,
+                    PhoneNumber = a.Buyer.PhoneNumber
+                }
+            }).ToList();
         }
     }
 }
