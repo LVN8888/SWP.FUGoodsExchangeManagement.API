@@ -1,4 +1,6 @@
-﻿using SWP.FUGoodsExchangeManagement.Repository.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SWP.FUGoodsExchangeManagement.Repository.Models;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.CampusRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.CategoryRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.PaymentRepositories;
@@ -6,11 +8,13 @@ using SWP.FUGoodsExchangeManagement.Repository.Repository.PostApplyRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.PostModeRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.ProductImagesRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.ProductPostRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.ReportRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.TokenRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,6 +32,8 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
         private readonly IProductImagesRepository _productImagesRepository;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IPostApplyRepository _postApplyRepository;
+        private readonly ICampusRepository _campusRepository;
+        private readonly IReportRepository _reportRepository;
 
         public UnitOfWork(FugoodsExchangeManagementContext context,
             IUserRepository userRepository,
@@ -39,6 +45,8 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
             IProductImagesRepository productImagesRepository,
             IPaymentRepository paymentRepository,
             IPostApplyRepository postApplyRepository)
+            ICampusRepository campusRepository,
+            IReportRepository reportRepository)
         {
             _context = context;
             _userRepository = userRepository;
@@ -50,6 +58,8 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
             _productImagesRepository = productImagesRepository;
             _paymentRepository = paymentRepository;
             _postApplyRepository = postApplyRepository;
+            _campusRepository = campusRepository;
+            _reportRepository = reportRepository;
         }
 
         public async Task<int> SaveChangeAsync()
@@ -66,5 +76,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
         public IProductImagesRepository ProductImagesRepository => _productImagesRepository;
         public IPaymentRepository PaymentRepository => _paymentRepository;
         public IPostApplyRepository PostApplyRepository => _postApplyRepository;
+        public ICampusRepository CampusRepository => _campusRepository;
+        public IReportRepository ReportRepository => _reportRepository;
     }
 }
