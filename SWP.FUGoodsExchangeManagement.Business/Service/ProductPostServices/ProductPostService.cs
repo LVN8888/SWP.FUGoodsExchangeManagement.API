@@ -182,9 +182,6 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                 Status = PaymentStatus.Pending.ToString(),
             };
             await _unitOfWork.PaymentRepository.Insert(newPayment);
-            chosenPost.ExpiredDate = DateTime.Now.AddDays(int.Parse(chosenPostMode.Duration));
-            chosenPost.PostModeId = postModeId;
-            _unitOfWork.ProductPostRepository.Update(chosenPost);
             await _unitOfWork.SaveChangeAsync();
         }
 

@@ -240,6 +240,9 @@ public partial class FugoodsExchangeManagementContext : DbContext
             entity.Property(e => e.Price)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Type).HasMaxLength(100);
         });
 

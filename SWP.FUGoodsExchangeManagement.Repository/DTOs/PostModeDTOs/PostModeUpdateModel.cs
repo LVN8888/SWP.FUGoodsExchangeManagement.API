@@ -9,8 +9,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.PostModeDTOs
 {
     public class PostModeUpdateModel
     {
-        [Required(ErrorMessage = "Id can't be null")]
-        public string Id { get; set; } = null!;
 
         [Required(ErrorMessage = "Please input type")]
         public string Type { get; set; } = null!;
