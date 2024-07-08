@@ -46,9 +46,9 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         }
 
         [HttpGet("get-all")]
-        public async Task<IActionResult> GetAllCampuses(int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllCampuses()
         {
-            var campuses = await _campusService.GetAllCampusesAsync(pageIndex, pageSize);
+            var campuses = await _campusService.GetAllCampusesAsync();
             return Ok(campuses);
         }
     }
