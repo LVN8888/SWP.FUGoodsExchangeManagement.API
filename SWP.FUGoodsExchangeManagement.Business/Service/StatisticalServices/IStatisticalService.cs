@@ -10,5 +10,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.StatisticalServices
     public interface IStatisticalService
     {
         Task<SummaryResponseModel> GetSummaryAsync();
+        Task<IEnumerable<PostModeStatisticsResponseModel>> GetPostModeStatisticsAsync(DateTime? startDate, DateTime? endDate);
+        Task<IEnumerable<UserPurchaseStatisticsResponseModel>> GetUserPurchaseStatisticsAsync(DateTime? startDate, DateTime? endDate);
     }
 }
