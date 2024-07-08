@@ -9,6 +9,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Enums
     public enum PaymentStatus
     {
         Pending,
-        Success
+        Success,
+        Error
     }
 }
