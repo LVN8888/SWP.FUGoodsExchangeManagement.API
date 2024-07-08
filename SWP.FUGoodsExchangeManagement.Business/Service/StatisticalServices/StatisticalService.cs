@@ -21,7 +21,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.StatisticalServices
         public async Task<SummaryResponseModel> GetSummaryAsync()
         {
             var totalUsers = await _unitOfWork.UserRepository.Count(u => u.Role != "Admin");
-            //var totalPosts = await _unitOfWork.ProductPostRepository.Count();
+            var totalPosts = await _unitOfWork.ProductPostRepository.Count();
             var totalReports = await _unitOfWork.ReportRepository.Count();
             var totalCampuses = await _unitOfWork.CampusRepository.Count();
             var totalCategories = await _unitOfWork.CategoryRepository.Count();
@@ -29,7 +29,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.StatisticalServices
             return new SummaryResponseModel
             {
                 TotalUsers = totalUsers,
-                //TotalPosts = totalPosts,
+                TotalPosts = totalPosts,
                 TotalReports = totalReports,
                 TotalCampuses = totalCampuses,
                 TotalCategories = totalCategories
