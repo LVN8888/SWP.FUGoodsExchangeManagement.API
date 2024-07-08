@@ -44,7 +44,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.UnitOfWork
             IPostModeRepository postModeRepository,
             IProductImagesRepository productImagesRepository,
             IPaymentRepository paymentRepository,
-            IPostApplyRepository postApplyRepository)
+            IPostApplyRepository postApplyRepository,
             ICampusRepository campusRepository,
             IReportRepository reportRepository)
         {
