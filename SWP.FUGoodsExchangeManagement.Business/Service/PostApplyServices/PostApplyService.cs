@@ -1,6 +1,8 @@
-﻿using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
+﻿using MailKit.Search;
+using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
 using SWP.FUGoodsExchangeManagement.Business.Utils;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.PostApplyDTOs;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.ProductPostDTOs.ResponseModels;
 using SWP.FUGoodsExchangeManagement.Repository.Enums;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.UnitOfWork;
@@ -74,6 +76,37 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.PostApplyServices
                     PhoneNumber = a.Buyer.PhoneNumber
                 }
             }).ToList();
+        }
+
+        public async Task<List<ProductPostResponseModel>> GetOwnApplyPost(string token, int? pageIndex, int ItemPerPage)
+        {
+            var userId = _authenticationService.decodeToken(token, "userId");
+            var ownList = await _unitOfWork.PostApplyRepository.Get(p => p.BuyerId.Equals(userId));
+            var buyingPostListId = ownList.Select(o => o.ProductPostId).ToList();
+            var allBuyingPost = await _unitOfWork.ProductPostRepository.Get(p => buyingPostListId.Contains(p.Id), null, includeProperties: "Category,PostMode,Campus,CreatedByNavigation", pageIndex ?? 1, ItemPerPage);
+            var waitingPostListId = allBuyingPost.Select(a => a.Id).ToList();
+            var allImages = await _unitOfWork.ProductImagesRepository.Get(i => waitingPostListId.Contains(i.ProductPostId));
+
+            var responseList = allBuyingPost.Select(a => new ProductPostResponseModel
+            {
+                Id = a.Id,
+                Title = a.Title,
+                Description = a.Description,
+                Price = a.Price,
+                CreatedBy = new PostAuthor
+                {
+                    FullName = a.CreatedByNavigation.Fullname,
+                    Email = a.CreatedByNavigation.Email,
+                    PhoneNumber = a.CreatedByNavigation.PhoneNumber
+                },
+                Category = a.Category.Name,
+                Campus = a.Campus.Name,
+                CreatedDate = a.CreatedDate,
+                ExpiredDate = a.ExpiredDate ?? null,
+                PostMode = a.PostMode.Type,
+                ImageUrls = allImages.Where(ai => ai.ProductPostId.Equals(a.Id)).Select(ai => ai.Url).ToList(),
+            }).ToList();
+            return responseList;
         }
     }
 }
