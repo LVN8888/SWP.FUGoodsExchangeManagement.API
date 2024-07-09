@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
 using SWP.FUGoodsExchangeManagement.Business.Utils;
+using SWP.FUGoodsExchangeManagement.Business.VnPayService;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.ProductPostDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.ProductPostDTOs.ResponseModels;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.VnPayDTOs;
 using SWP.FUGoodsExchangeManagement.Repository.Enums;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.ProductPostRepositories;
@@ -24,7 +27,6 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
         private readonly IMapper _mapper;
         private readonly IAuthenticationService _authenticationService;
 
-
         public ProductPostService(IUnitOfWork unitOfWork, IMapper mapper, IAuthenticationService authenticationService)
         {
             _unitOfWork = unitOfWork;
@@ -32,14 +34,16 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
             _authenticationService = authenticationService;
         }
 
-        public async Task CreateWaitingProductPost(ProductPostCreateRequestModel requestModel, string token)
+        public async Task<string> CreateWaitingProductPost(ProductPostCreateRequestModel requestModel, string token)
         {
             var userId = _authenticationService.decodeToken(token, "userId");
+
             ProductPost newProductPost = _mapper.Map<ProductPost>(requestModel);
             var postId = Guid.NewGuid().ToString();
             newProductPost.Id = postId;
-            newProductPost.Status = ProductPostStatus.Waiting.ToString();
+            newProductPost.Status = ProductPostStatus.Unpaid.ToString();
             newProductPost.CreatedBy = userId;
+            newProductPost.CreatedDate = DateTime.Now;
             var chosenPostMode = await _unitOfWork.PostModeRepository.GetSingle(p => p.Id.Equals(requestModel.PostModeId));
 
             var newPayment = new Payment
@@ -51,9 +55,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                 PostModeId = requestModel.PostModeId,
                 Status = PaymentStatus.Pending.ToString()
             };
-            newProductPost.CreatedDate = DateTime.Now;
-            await _unitOfWork.ProductPostRepository.Insert(newProductPost);
-            await _unitOfWork.PaymentRepository.Insert(newPayment);
+
             var postImages = new List<ProductImage>();
             foreach (var url in requestModel.ImagesUrl)
             {
@@ -64,8 +66,13 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                     Url = url
                 });
             }
+
+            await _unitOfWork.ProductPostRepository.Insert(newProductPost);
+            await _unitOfWork.PaymentRepository.Insert(newPayment);
             await _unitOfWork.ProductImagesRepository.InsertRange(postImages);
             await _unitOfWork.SaveChangeAsync();
+
+            return newPayment.Id;
         }
 
         public async Task<List<ProductPostResponseModel>> ViewAllPostWithStatus(int? pageIndex, PostSearchModel searchModel, string status)
@@ -333,7 +340,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
 
             chosenPost.ExpiredDate = DateTime.Now.AddDays(int.Parse(chosenPostMode.Duration));
             chosenPost.PostModeId = postModeId;
-            chosenPost.Status = ProductPostStatus.Open.ToString();
+            chosenPost.Status = ProductPostStatus.Pending.ToString();
 
             _unitOfWork.ProductPostRepository.Update(chosenPost);
             await _unitOfWork.SaveChangeAsync();

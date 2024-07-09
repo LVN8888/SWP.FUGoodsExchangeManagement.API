@@ -10,7 +10,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
 {
     public interface IProductPostService
     {
-        Task CreateWaitingProductPost(ProductPostCreateRequestModel requestModel, string token);
+        Task<string> CreateWaitingProductPost(ProductPostCreateRequestModel requestModel, string token);
         Task ApprovePost(string status, string id);
         Task<List<ProductPostResponseModel>> ViewAllPostWithStatus(int? pageIndex, PostSearchModel searchModel, string status);
         Task<List<ProductPostResponseModel>> ViewOwnPostWithStatus(int? pageIndex, PostSearchModel searchModel, string status, string token);

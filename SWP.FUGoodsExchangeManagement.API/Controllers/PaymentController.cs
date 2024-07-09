@@ -36,5 +36,15 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
 
             return Ok("Update payment successfully, post duration has not been extended due to an error");
         }
+
+        [HttpGet]
+        [Authorize(Roles = "User")]
+        [Route("payment-url")]
+        public async Task<IActionResult> GetPaymentUrl([FromQuery] string paymentId, [FromQuery] string redirectUrl)
+        {
+            var paymentUrl = await _paymentService.GetPaymentUrl(HttpContext, paymentId, redirectUrl);
+
+            return Ok(paymentUrl);
+        }
     }
 }

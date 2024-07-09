@@ -13,6 +13,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Enums
         Cancel,
         Pending,
         Closed,
-        Expired
+        Expired,
+        Unpaid
     }
 }
