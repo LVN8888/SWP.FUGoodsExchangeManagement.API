@@ -29,6 +29,11 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.PostApplyServices
         {
             var userId = _authenticationService.decodeToken(token, "userId");
             var chosenPost = await _unitOfWork.ProductPostRepository.GetSingle(p => p.Id.Equals(postId));
+            var postApply = await _unitOfWork.PostApplyRepository.GetSingle(p => p.BuyerId.Equals(userId) && p.ProductPostId.Equals(postId));
+            if (postApply != null)
+            {
+                throw new CustomException("You have already applied this product post");
+            }
 
             string mess = null;
             if (message != null)
