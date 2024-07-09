@@ -10,5 +10,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.PaymentRepositorie
 {
     public interface IPaymentRepository : IGenericRepository<Payment>
     {
+        Task<Payment> GetById(string paymentId);
     }
 }
