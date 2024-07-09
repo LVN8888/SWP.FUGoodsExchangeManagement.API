@@ -20,11 +20,14 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.GenericRepository
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "");
 
-        Task<TEntity> GetByID(int id);
+        Task<TEntity> GetById(string id);
         Task Insert(TEntity entity);
         Task Delete(object id);
         Task Delete(TEntity entityToDelete);
         void Update(TEntity entityToUpdate);
         Task<int> Count(Expression<Func<TEntity, bool>> filter = null);
+        Task InsertRange(List<TEntity> entities);
+        Task UpdateRange(List<TEntity> entities);
+        Task DeleteRange(List<TEntity> entities);
     }
 }

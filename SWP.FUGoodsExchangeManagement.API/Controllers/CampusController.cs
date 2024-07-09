@@ -34,20 +34,8 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            try
-            {
-                await _campusService.EditCampusAsync(editCampusDto);
-                return Ok("Campus edited successfully");
-            }
-            catch (CustomException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            await _campusService.EditCampusAsync(editCampusDto);
+            return Ok("Campus edited successfully");
         }
 
         [HttpDelete("delete/{id}")]
@@ -58,9 +46,9 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         }
 
         [HttpGet("get-all")]
-        public async Task<IActionResult> GetAllCampuses(int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllCampuses()
         {
-            var campuses = await _campusService.GetAllCampusesAsync(pageIndex, pageSize);
+            var campuses = await _campusService.GetAllCampusesAsync();
             return Ok(campuses);
         }
     }

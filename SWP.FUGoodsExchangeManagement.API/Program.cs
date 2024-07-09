@@ -8,15 +8,28 @@ using SWP.FUGoodsExchangeManagement.Business.Service.CampusServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.CategoryServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.OTPServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.PaymentServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.PostModeServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.ReportServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.SecretServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.StatisticalServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.UserServices;
+using SWP.FUGoodsExchangeManagement.Business.VnPayService;
 using SWP.FUGoodsExchangeManagement.Repository.Mappers;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.CampusRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.CategoryRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.OTPRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.PaymentRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.PostApplyRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.PostModeRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.ProductImagesRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.ProductPostRepositories;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.ProductPostRepository;
+using SWP.FUGoodsExchangeManagement.Repository.Repository.ReportRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.TokenRepositories;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.UserRepositories;
-using SWP.FUGoodsExchangeManagement.Repository.Service.UserServices;
 using SWP.FUGoodsExchangeManagement.Repository.UnitOfWork;
 using System.Text;
 
@@ -30,7 +43,7 @@ builder.Services.AddSwaggerGen();
 
 // =============================================================================================================
 builder.Services.AddDbContext<FugoodsExchangeManagementContext>(
-    options => options.UseSqlServer(SecretService.ConnectionString)
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
@@ -44,12 +57,25 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOTPService, OTPService>();
 builder.Services.AddScoped<ICampusService, CampusService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductPostService, ProductPostService>();
+builder.Services.AddScoped<IPostModeService, PostModeService>();
+builder.Services.AddScoped<IStatisticalService, StatisticalService>();
+builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ITokenRepository, TokenRepository>();
 builder.Services.AddTransient<IOTPRepository, OTPRepository>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ICampusRepository, CampusRepository>();
+builder.Services.AddTransient<IProductImagesRepository, ProductImagesRepository>();
+builder.Services.AddTransient<IProductPostRepository, ProductPostRepository>();
+builder.Services.AddTransient<IPaymentRepository, PaymentRepository>();
+builder.Services.AddTransient<IPostModeRepository, PostModeRepository>();
+builder.Services.AddTransient<IPostApplyRepository, PostApplyRepository>();
+builder.Services.AddTransient<IReportRepository, ReportRepository>();
+
 
 builder.Services.AddCors(options =>
 {
@@ -117,8 +143,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 //}
 
 app.UseHttpsRedirection();

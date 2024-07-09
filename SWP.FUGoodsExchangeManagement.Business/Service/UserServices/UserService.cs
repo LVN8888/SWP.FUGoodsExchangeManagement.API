@@ -22,7 +22,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.ResponseModels;
 
-namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
+namespace SWP.FUGoodsExchangeManagement.Business.Service.UserServices
 {
     public class UserService : IUserService
     {
@@ -125,26 +125,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
                 throw new CustomException("User email existed!");
             }
 
-            if (!request.Email.EndsWith("@fpt.edu.vn") && !request.Email.EndsWith("@fe.edu.vn"))
-            {
-                throw new CustomException("Email is not in correct format. Please input @fpt email!");
-            }
-
-            if (request.Role.IsNullOrEmpty())
-            {
-                throw new CustomException("Please enter role");
-            }
-
-            if (!Enum.IsDefined(typeof(RoleEnums), request.Role))
-            {
-                throw new CustomException("Please enter role in correct format");
-            }
-
-            if (!Regex.Match(request.PhoneNumber, @"^\d{10,11}$").Success)
-            {
-                throw new CustomException("Phone number is not in correct format!");
-            }
-
             User newUser = _mapper.Map<User>(request);
             newUser.Id = Guid.NewGuid().ToString();
             var (salt, hash) = PasswordHasher.HashPassword(request.Password);
@@ -168,21 +148,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             if (currentUser != null)
             {
                 throw new CustomException("User email existed!");
-            }
-
-            if (!request.Email.EndsWith("@fpt.edu.vn") && !request.Email.EndsWith("@fe.edu.vn"))
-            {
-                throw new CustomException("Email is not in correct format. Please input @fpt email!");
-            }
-
-            if (!Regex.Match(request.PhoneNumber, @"^\d{10,11}$").Success)
-            {
-                throw new CustomException("Phone number is not in correct format!");
-            }
-
-            if (request.Fullname.IsNullOrEmpty())
-            {
-                throw new CustomException("Please enter your name");
             }
 
             User newUser = _mapper.Map<User>(request);
@@ -287,8 +252,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
 
         public async Task<List<UserListResponseModel>> GetUserList(int? page, string? search, string? sort, string? userRole)
         {
-            if (!string.IsNullOrEmpty(userRole) && !Enum.IsDefined(typeof(RoleEnums), userRole))
-                throw new CustomException("User role is not valid");
             if (!string.IsNullOrEmpty(sort) && !Enum.IsDefined(typeof(UserSortEnums), sort))
                 throw new CustomException("Sort value is not valid");
 
@@ -296,9 +259,9 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
 
             var qr = await _unitOfWork.UserRepository.Get(pageIndex: page ?? 0,
                                                           pageSize: UserPerPage,
-                                                          filter: (u => (u.Fullname.Contains(searchUnsign) || u.Email.Contains(searchUnsign)) &&
+                                                          filter: u => (u.Fullname.Contains(searchUnsign) || u.Email.Contains(searchUnsign)) &&
                                                                         (string.IsNullOrEmpty(userRole) || u.Role.Equals(userRole))
-                                                                  ),
+                                                                  ,
                                                           orderBy: GetOrderQuery(sort)
                                                          );
             return _mapper.Map<List<UserListResponseModel>>(qr);
@@ -342,33 +305,14 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             if (user == null)
             {
                 throw new CustomException("User not found!");
-            }
-            var existingUserWithEmail = await _unitOfWork.UserRepository.GetSingle(u => u.Email.Equals(request.Email) && !u.Id.Equals(request.Id));
-            if (existingUserWithEmail != null)
-            {
-                throw new CustomException("Email already exists!");
-            }
+            }           
             var existingUserWithPhoneNumber = await _unitOfWork.UserRepository.GetSingle(u => u.PhoneNumber.Equals(request.PhoneNumber) && !u.Id.Equals(request.Id));
             if (existingUserWithPhoneNumber != null)
             {
                 throw new CustomException("Phone number already exists!");
-            }
-
-            if (!Enum.IsDefined(typeof(RoleEnums), request.Role))
-            {
-                throw new CustomException("Role is not valid.");
-            }
-
-            if (!request.Email.EndsWith("@fpt.edu.vn") && !request.Email.EndsWith("@fe.edu.vn"))
-            {
-                throw new CustomException("Email is not in correct format. Please input @fpt email!");
-            }
-
+            }          
             user.Fullname = request.Fullname;
-            user.Email = request.Email;
             user.PhoneNumber = request.PhoneNumber;
-            user.Role = request.Role;
-
             _unitOfWork.UserRepository.Update(user);
             var result = await _unitOfWork.SaveChangeAsync();
             if (result < 1)
@@ -406,14 +350,21 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Service.UserServices
             if (refreshToken != null)
             {
                 _unitOfWork.TokenRepository.Delete(refreshToken);
-                var result = await _unitOfWork.SaveChangeAsync();
-                if (result < 1)
-                {
-                    throw new Exception("Internal Server Error");
-                }
+                await _unitOfWork.SaveChangeAsync();
+
             }
         }
 
+        public async Task<UserResponseModel> GetDetailsOfUser(string id)
+        {
+            var user = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(id));
+            if (user == null)
+            {
+                throw new CustomException("User is not existed");
+            }
+            var response = _mapper.Map<UserResponseModel>(user);
+            return response;
+        }
 
     }
 }

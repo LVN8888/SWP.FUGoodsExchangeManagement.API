@@ -12,6 +12,8 @@ using SWP.FUGoodsExchangeManagement.Repository.DTOs.TokenDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.CampusDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.CampusDTOs.ResponseModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.CategoryDTOs.ResponseModel;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.ProductPostDTOs.RequestModels;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.CategoryDTOs.RequestModel;
 
 namespace SWP.FUGoodsExchangeManagement.Repository.Mappers
 {
@@ -23,6 +25,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Mappers
             CreateMap<UserRegisterRequestModelVer1, User>();
             CreateMap<RefreshToken, GetNewRefreshTokenDTO>();
             CreateMap<User, UserListResponseModel>();
+            CreateMap<User, UserResponseModel>();
             //Campus
             CreateMap<Campus, CampusResponseModel>();
             CreateMap<AddCampusDTO, Campus>();
@@ -30,6 +33,11 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Mappers
             CreateMap<DeleteCampusDTO, Campus>();
 
             CreateMap<Category, CategoryResponseModel>();
+            CreateMap<CategoryCreateRequestModel, Category>();
+
+            CreateMap<ProductPostUpdateRequestModel, ProductPost>();
+            CreateMap<ProductPostCreateRequestModel, ProductPost>();
+
         }
     }
 }

@@ -15,6 +15,8 @@ public partial class Payment
 
     public string PostModeId { get; set; } = null!;
 
+    public string Status { get; set; } = null!;
+
     public virtual PostMode PostMode { get; set; } = null!;
 
     public virtual ProductPost ProductPost { get; set; } = null!;
