@@ -58,6 +58,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                 Status = PaymentStatus.Pending.ToString()
             };
 
+
             var postImages = new List<ProductImage>();
             foreach (var url in requestModel.ImagesUrl)
             {
@@ -89,7 +90,80 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
 
         public async Task<List<ProductPostResponseModel>> ViewOwnPostExceptMine(int? pageIndex, PostSearchModel searchModel, string token)
         {
-            return await ViewAllPostWithStatus(pageIndex, ProductPostStatus.Open.ToString(), searchModel, token, 0);
+            string userId = null;
+            if (token != null)
+            {
+                userId = _authenticationService.decodeToken(token, "userId");
+            }
+            Func<IQueryable<ProductPost>, IOrderedQueryable<ProductPost>> orderBy;
+            orderBy = o => o.OrderBy(p => p.Price).ThenBy(p => p.CreatedDate);
+            Expression<Func<ProductPost, bool>> filter;
+
+            filter = p => p.Status.Equals(ProductPostStatus.Open.ToString()) || p.Status.Equals(ProductPostStatus.Pending.ToString());
+
+            if (userId != null)
+            {
+                filter = filter.And(p => !p.CreatedBy.Equals(userId));
+            }
+
+            if (searchModel != null)
+            {
+                if (searchModel.orderPriceDescending.HasValue && searchModel.orderPriceDescending.Value)
+                {
+                    orderBy = orderBy.AndThen(q => q.OrderByDescending(p => p.Price));
+                }
+                else if (searchModel.orderPriceDescending.HasValue && !searchModel.orderPriceDescending.Value)
+                {
+                    orderBy = orderBy.AndThen(q => q.OrderBy(p => p.Price));
+                }
+
+                if (searchModel.orderDateDescending.HasValue && searchModel.orderDateDescending.Value)
+                {
+                    orderBy = orderBy.AndThen(q => q.OrderByDescending(p => p.CreatedDate));
+                }
+                else if (searchModel.orderDateDescending.HasValue && !searchModel.orderDateDescending.Value)
+                {
+                    orderBy = orderBy.AndThen(q => q.OrderBy(p => p.CreatedDate));
+                }
+
+                if (!searchModel.Campus.IsNullOrEmpty())
+                {
+                    filter = filter.And(p => p.Campus.Name.ToLower().Equals(searchModel.Campus.ToLower()));
+                }
+                if (!searchModel.Title.IsNullOrEmpty())
+                {
+                    filter = filter.And(p => p.Title.ToLower().Contains(searchModel.Title.ToLower()));
+                }
+                if (!searchModel.Category.IsNullOrEmpty())
+                {
+                    filter = filter.And(p => p.Category.Name.ToLower().Contains(searchModel.Category.ToLower()));
+                }
+            }
+
+            var allWaitingPost = await _unitOfWork.ProductPostRepository.Get(filter, orderBy, includeProperties: "Category,PostMode,Campus,CreatedByNavigation", pageIndex ?? 1, ItemPerPage);
+            var waitingPostListId = allWaitingPost.Select(a => a.Id).ToList();
+            var allImages = await _unitOfWork.ProductImagesRepository.Get(i => waitingPostListId.Contains(i.ProductPostId));
+
+            var responseList = allWaitingPost.Select(a => new ProductPostResponseModel
+            {
+                Id = a.Id,
+                Title = a.Title,
+                Description = a.Description,
+                Price = a.Price,
+                CreatedBy = new PostAuthor
+                {
+                    FullName = a.CreatedByNavigation.Fullname,
+                    Email = a.CreatedByNavigation.Email,
+                    PhoneNumber = a.CreatedByNavigation.PhoneNumber
+                },
+                Category = a.Category.Name,
+                Campus = a.Campus.Name,
+                CreatedDate = a.CreatedDate,
+                ExpiredDate = a.ExpiredDate ?? null,
+                PostMode = a.PostMode.Type,
+                ImageUrls = allImages.Where(ai => ai.ProductPostId.Equals(a.Id)).Select(ai => ai.Url).ToList(),
+            }).ToList();
+            return responseList;
         }
 
         public async Task<ProductPostResponseModel> ViewDetailsOfPost(string id)
