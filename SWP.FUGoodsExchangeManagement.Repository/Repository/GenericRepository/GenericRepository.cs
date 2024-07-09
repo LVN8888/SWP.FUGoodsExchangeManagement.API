@@ -91,7 +91,6 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.GenericRepository
         public async Task InsertRange(List<TEntity> entities)
         {
             await dbSet.AddRangeAsync(entities);
-            await context.SaveChangesAsync();
         }
 
         public virtual async Task Delete(object id)
