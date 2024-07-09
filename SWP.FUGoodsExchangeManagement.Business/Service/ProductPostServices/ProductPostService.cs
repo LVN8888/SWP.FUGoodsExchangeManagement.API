@@ -407,16 +407,25 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                 throw new CustomException("The chosen post is not existed");
             }
 
-            if (!chosenPost.Status.Equals(ProductPostStatus.Expired.ToString()))
-            {
-                throw new CustomException("The chosen post cannot be extended");
-            }
-
             var chosenPostMode = await _unitOfWork.PostModeRepository.GetSingle(p => p.Id.Equals(postModeId));
+
+            if (chosenPost.Status.Equals(ProductPostStatus.Unpaid.ToString()))
+            {
+                // waiting means wait for admin approval
+                chosenPost.Status = ProductPostStatus.Waiting.ToString();
+            }
+            else if (chosenPost.Status.Equals(ProductPostStatus.Expired.ToString()))
+            {
+                // open means post that approved but is expired and then extend
+                chosenPost.Status = ProductPostStatus.Open.ToString();
+            }
+            else
+            {
+                throw new Exception($"Post status is {chosenPost.Status} and is not allowed to update!");
+            }
 
             chosenPost.ExpiredDate = DateTime.Now.AddDays(int.Parse(chosenPostMode.Duration));
             chosenPost.PostModeId = postModeId;
-            chosenPost.Status = ProductPostStatus.Pending.ToString();
 
             _unitOfWork.ProductPostRepository.Update(chosenPost);
             await _unitOfWork.SaveChangeAsync();
