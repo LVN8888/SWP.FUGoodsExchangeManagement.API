@@ -9,6 +9,7 @@ using SWP.FUGoodsExchangeManagement.Business.Service.CategoryServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.MailServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.OTPServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.PaymentServices;
+using SWP.FUGoodsExchangeManagement.Business.Service.PostApplyServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.PostModeServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.ReportServices;
@@ -61,6 +62,7 @@ builder.Services.AddScoped<IPostModeService, PostModeService>();
 builder.Services.AddScoped<IStatisticalService, StatisticalService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IPostApplyService, PostApplyService>();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ITokenRepository, TokenRepository>();
@@ -141,8 +143,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 //}
 
 app.UseHttpsRedirection();
