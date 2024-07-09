@@ -27,6 +27,8 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
         private readonly IMapper _mapper;
         private readonly IAuthenticationService _authenticationService;
 
+        private const int ItemPerPage = 8;
+
         public ProductPostService(IUnitOfWork unitOfWork, IMapper mapper, IAuthenticationService authenticationService)
         {
             _unitOfWork = unitOfWork;
@@ -297,7 +299,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                 }
             }
 
-            var allWaitingPost = await _unitOfWork.ProductPostRepository.Get(filter, orderBy, includeProperties: "Category,PostMode,Campus,CreatedByNavigation", pageIndex ?? 1, 3);
+            var allWaitingPost = await _unitOfWork.ProductPostRepository.Get(filter, orderBy, includeProperties: "Category,PostMode,Campus,CreatedByNavigation", pageIndex ?? 1, ItemPerPage);
             var waitingPostListId = allWaitingPost.Select(a => a.Id).ToList();
             var allImages = await _unitOfWork.ProductImagesRepository.Get(i => waitingPostListId.Contains(i.ProductPostId));
 
