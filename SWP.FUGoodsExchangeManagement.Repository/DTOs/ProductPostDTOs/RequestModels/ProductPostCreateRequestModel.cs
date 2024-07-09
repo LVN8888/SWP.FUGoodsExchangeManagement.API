@@ -29,5 +29,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.ProductPostDTOs.RequestM
 
         [Required(ErrorMessage = "Please choose image(s) for product post")]
         public List<string> ImagesUrl { get; set; } = null!;
+
+        public string RedirectUrl { get; set; } = null!;
     }
 }

@@ -14,6 +14,6 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.CampusServices
         Task AddCampusAsync(AddCampusDTO addCampusDto);
         Task EditCampusAsync(EditCampusDTO editCampusDto);
         Task DeleteCampusAsync(DeleteCampusDTO deleteCampusDTO);
-        Task<IEnumerable<CampusResponseModel>> GetAllCampusesAsync(int pageIndex, int pageSize);
+        Task<IEnumerable<CampusResponseModel>> GetAllCampusesAsync();
     }
 }

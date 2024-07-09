@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SWP.FUGoodsExchangeManagement.Business.Service.PaymentServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.ProductPostDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.ProductPostDTOs.ResponseModels;
@@ -12,9 +13,12 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
     public class ProductPostController : ControllerBase
     {
         private readonly IProductPostService _productPostService;
-        public ProductPostController(IProductPostService productPostService)
+        private readonly IPaymentService _paymentService;
+
+        public ProductPostController(IProductPostService productPostService, IPaymentService paymentService)
         {
             _productPostService = productPostService;
+            _paymentService = paymentService;
         }
 
         [HttpPost]
@@ -22,8 +26,11 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         public async Task<IActionResult> CreateProductPost(ProductPostCreateRequestModel requestModel)
         {
             string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
-            await _productPostService.CreateWaitingProductPost(requestModel, token);
-            return Ok("Create post successfully. Please wait for moderator approving your post");
+            var paymentId = await _productPostService.CreateWaitingProductPost(requestModel, token);
+
+            var paymentUrl = await _paymentService.GetPaymentUrl(HttpContext, paymentId, requestModel.RedirectUrl);
+
+            return Ok(paymentUrl);
         }
 
         [HttpGet]
