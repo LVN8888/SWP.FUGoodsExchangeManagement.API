@@ -25,6 +25,16 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             return Ok(response);
         }
 
+        [HttpGet]
+        [Route("buying/me")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> ViewOwnBuyingPost(int? pageIndex)
+        {
+            var token = Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var response = await _postApplyService.GetOwnApplyPost(token, pageIndex, 8);
+            return Ok(response);
+        }
+
         [HttpPost]
         [Authorize(Roles = "User")]
         [Route("{postId}")]
