@@ -3,8 +3,9 @@ using System.Net.Sockets;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 
-namespace SWP.FUGoodsExchangeManagement.API.VnPayService
+namespace SWP.FUGoodsExchangeManagement.Business.VnPayService
 {
     public class VnPayLibrary
     {

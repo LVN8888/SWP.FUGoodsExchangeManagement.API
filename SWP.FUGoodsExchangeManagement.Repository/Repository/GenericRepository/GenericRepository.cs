@@ -78,7 +78,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Repository.GenericRepository
             return await query.SingleOrDefaultAsync();
         }
 
-        public virtual async Task<TEntity> GetByID(string id)
+        public virtual async Task<TEntity> GetById(string id)
         {
             return await dbSet.FindAsync(id);
         }

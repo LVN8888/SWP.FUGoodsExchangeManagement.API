@@ -82,13 +82,9 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.CampusServices
             }
         }
 
-        public async Task<IEnumerable<CampusResponseModel>> GetAllCampusesAsync(int pageIndex, int pageSize)
+        public async Task<IEnumerable<CampusResponseModel>> GetAllCampusesAsync()
         {
-            var campuses = await _campusRepository.Get(
-                orderBy: q => q.OrderBy(c => c.Name),
-                pageIndex: pageIndex,
-                pageSize: pageSize);
-
+            var campuses = await _campusRepository.Get(orderBy: q => q.OrderBy(c => c.Name));
             return _mapper.Map<IEnumerable<CampusResponseModel>>(campuses);
         }
     }

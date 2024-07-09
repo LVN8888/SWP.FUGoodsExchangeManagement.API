@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SWP.FUGoodsExchangeManagement.Business.Service.StatisticalServices;
+using System.Linq;
+using System.Threading.Tasks;
+
 
 namespace SWP.FUGoodsExchangeManagement.API.Controllers
 {
@@ -15,9 +18,24 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         }
 
         [HttpGet("summary")]
-        public async Task<IActionResult> GetSummaryAsync()
+        public async Task<IActionResult> GetSummary()
         {
-            return Ok(await _statisticalService.GetSummaryAsync());
+            var summary = await _statisticalService.GetSummaryAsync();
+            return Ok(summary);
+        }
+
+        [HttpGet("post-mode")]
+        public async Task<IActionResult> GetPostModeStatistics(DateTime? startDate, DateTime? endDate)
+        {
+            var statistics = await _statisticalService.GetPostModeStatisticsAsync(startDate, endDate);
+            return Ok(statistics);
+        }
+
+        [HttpGet("user-purchase")]
+        public async Task<IActionResult> GetUserPurchaseStatistics(DateTime? startDate, DateTime? endDate)
+        {
+            var statistics = await _statisticalService.GetUserPurchaseStatisticsAsync(startDate, endDate);
+            return Ok(statistics);
         }
     }
 }

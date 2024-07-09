@@ -16,6 +16,7 @@ using SWP.FUGoodsExchangeManagement.Business.Service.ReportServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.SecretServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.StatisticalServices;
 using SWP.FUGoodsExchangeManagement.Business.Service.UserServices;
+using SWP.FUGoodsExchangeManagement.Business.VnPayService;
 using SWP.FUGoodsExchangeManagement.Repository.Mappers;
 using SWP.FUGoodsExchangeManagement.Repository.Models;
 using SWP.FUGoodsExchangeManagement.Repository.Repository.CampusRepositories;
@@ -63,6 +64,7 @@ builder.Services.AddScoped<IStatisticalService, StatisticalService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IPostApplyService, PostApplyService>();
+builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ITokenRepository, TokenRepository>();

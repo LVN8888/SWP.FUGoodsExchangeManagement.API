@@ -1,6 +1,8 @@
 ﻿using SWP.FUGoodsExchangeManagement.Repository.DTOs.VnPayDTOs;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
-namespace SWP.FUGoodsExchangeManagement.API.VnPayService
+namespace SWP.FUGoodsExchangeManagement.Business.VnPayService
 {
     public class VnPayService : IVnPayService
     {
@@ -17,12 +19,22 @@ namespace SWP.FUGoodsExchangeManagement.API.VnPayService
             var tick = now.Ticks;
             var expiredDate = now.AddMinutes(15);
 
+            //var builder = new UriBuilder()
+            //{
+            //    Scheme = context.Request.Scheme,
+            //    Host = context.Request.Host.Host,
+            //    Port = context.Request.Host.Port ?? -1,
+            //    Path = _config["VnPay:RedirectSuffix"]
+            //};
+
+            //var redirectUrl = builder.ToString();
+
             var vnpay = new VnPayLibrary();
 
             vnpay.AddRequestData("vnp_Version", _config["VnPay:Version"]);
             vnpay.AddRequestData("vnp_Command", _config["VnPay:Command"]);
             vnpay.AddRequestData("vnp_TmnCode", _config["VnPay:TmnCode"]);
-            vnpay.AddRequestData("vnp_Amount", (model.Amount * 100).ToString());
+            vnpay.AddRequestData("vnp_Amount", (Math.Round(model.Amount * 100)).ToString());
             /*Số tiền thanh toán. Số tiền không mang các ký tự phân tách thập phân, phần nghìn, ký tự tiền tệ. 
              * Để gửi số tiền thanh toán là 100,000 VND (một trăm nghìn VNĐ) thì merchant 
              * cần nhân thêm 100 lần (khử phần thập phân), sau đó gửi sang VNPAY là: 10000000
@@ -33,11 +45,11 @@ namespace SWP.FUGoodsExchangeManagement.API.VnPayService
             vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context));
             vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
 
-            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toán cho đơn hàng:" + model.OrderId);
+            vnpay.AddRequestData("vnp_OrderInfo", "Payment for:" + model.OrderId);
             vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
-            vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:RedirectUrl"]);
+            vnpay.AddRequestData("vnp_ReturnUrl", model.RedirectUrl);
 
-            vnpay.AddRequestData("vnp_TxnRef", $"{model.OrderId}_{tick}");
+            vnpay.AddRequestData("vnp_TxnRef", model.PaymentId);
             /* Mã tham chiếu của giao dịch tại hệ thống của merchant.
              * Mã này là duy nhất dùng để phân biệt các đơn hàng gửi sang VNPAY.
              * Không được trùng lặp trong ngày*/
@@ -48,7 +60,7 @@ namespace SWP.FUGoodsExchangeManagement.API.VnPayService
             return paymentUrl;
         }
 
-        public VnPaymentResponseModel MakePayment(IQueryCollection colletions)
+        public VnPaymentResponseModel PaymentResponse(IQueryCollection colletions)
         {
             var vnpay = new VnPayLibrary();
             foreach (var (key, value) in colletions)
@@ -85,7 +97,8 @@ namespace SWP.FUGoodsExchangeManagement.API.VnPayService
                 Success = true,
                 PaymentMethod = "VnPay",
                 OrderDescription = orderInfo,
-                OrderId = txnRef,
+                OrderId = orderInfo.Split(":")[1].Trim(),
+                PaymentId = txnRef,
                 TransactionId = transactionId,
                 Token = secureHash,
                 VnPayResponseCode = responseCode,
