@@ -106,6 +106,13 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                 filter = filter.And(p => !p.CreatedBy.Equals(userId));
             }
 
+            var listPostApply = await _unitOfWork.PostApplyRepository.Get(p => p.BuyerId.Equals(userId));
+            var exceptList = listPostApply.Select(l => l.ProductPostId).ToList();
+            if (exceptList.Count() > 0)
+            {
+                filter = filter.And(p => !exceptList.Contains(p.Id));
+            }
+
             if (searchModel != null)
             {
                 if (searchModel.orderPriceDescending.HasValue && searchModel.orderPriceDescending.Value)
