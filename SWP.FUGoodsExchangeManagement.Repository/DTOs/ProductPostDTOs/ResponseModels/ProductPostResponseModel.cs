@@ -20,6 +20,8 @@ namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.ProductPostDTOs.Response
 
         public DateTime? ExpiredDate { get; set; }
 
+        public string Status { get; set; } = null!;
+
         public PostAuthor CreatedBy { get; set; } = null!;
 
         public string Category { get; set; } = null!;

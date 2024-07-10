@@ -302,7 +302,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
             await _unitOfWork.SaveChangeAsync();
         }
 
-        public async Task ClosePost(string id, string token)
+        public async Task ClosePost(string id, string token, string postApplyId)
         {
             var chosenPost = await _unitOfWork.ProductPostRepository.GetSingle(a => a.Id.Equals(id));
             var userId = _authenticationService.decodeToken(token, "userId");
@@ -322,12 +322,14 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                 chosenPost.Status = ProductPostStatus.Closed.ToString();
             }
             else throw new CustomException("There is no existed post with chosen Id");
+            var deletePostApplyList = await _unitOfWork.PostApplyRepository.Get(p => !p.Id.Equals(postApplyId));
 
+            await _unitOfWork.PostApplyRepository.DeleteRange(deletePostApplyList.ToList());
             _unitOfWork.ProductPostRepository.Update(chosenPost);
             await _unitOfWork.SaveChangeAsync();
         }
 
-        private async Task<List<ProductPostResponseModel>> ViewAllPostWithStatus(int? pageIndex, string status, PostSearchModel searchModel, string token, int option)
+        private async Task<List<ProductPostResponseModel>> ViewAllPostWithStatus(int? pageIndex, string? status, PostSearchModel searchModel, string token, int option)
         {
             string userId = null;
             if (token != null)
@@ -336,7 +338,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
             }
             Func<IQueryable<ProductPost>, IOrderedQueryable<ProductPost>> orderBy;
             orderBy = o => o.OrderBy(p => p.Price).ThenBy(p => p.CreatedDate);
-            Expression<Func<ProductPost, bool>> filter;
+            Expression<Func<ProductPost, bool>> filter = p => true;
             if (!status.IsNullOrEmpty())
             {
                 if (!Enum.GetNames(typeof(ProductPostStatus)).Contains(status))
@@ -344,10 +346,6 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                     throw new CustomException("Please input valid status");
                 }
                 filter = p => p.Status.Equals(status);
-            }
-            else
-            {
-                filter = null;
             }
 
             if (userId != null && option == 1)
@@ -403,6 +401,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                 Title = a.Title,
                 Description = a.Description,
                 Price = a.Price,
+                Status = a.Status,
                 CreatedBy = new PostAuthor
                 {
                     FullName = a.CreatedByNavigation.Fullname,
