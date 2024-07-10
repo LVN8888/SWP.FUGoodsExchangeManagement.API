@@ -41,7 +41,7 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = "Admin, Moderator")]
-        public async Task<IActionResult> GetAllProductPost(int? pageIndex, [FromQuery] PostSearchModel searchModel, string status)
+        public async Task<IActionResult> GetAllProductPost(int? pageIndex, [FromQuery] PostSearchModel searchModel, string? status)
         {
             var result = await _productPostService.ViewAllPostWithStatus(pageIndex, searchModel, status);
             return Ok(result);
@@ -50,7 +50,7 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         [HttpGet]
         [Route("me")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> GetOwnProductPost(int? pageIndex, [FromQuery] PostSearchModel searchModel, string status)
+        public async Task<IActionResult> GetOwnProductPost(int? pageIndex, [FromQuery] PostSearchModel searchModel, string? status)
         {
             var token = Request.Headers["Authorization"].ToString().Split(" ")[1];
             var result = await _productPostService.ViewOwnPostWithStatus(pageIndex, searchModel, status, token);
@@ -114,10 +114,10 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         [HttpPut]
         [Route("close/{id}")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> CloseProductPost(string id)
+        public async Task<IActionResult> CloseProductPost(string id, [FromBody] string postApplyId)
         {
             string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
-            await _productPostService.ClosePost(id, token);
+            await _productPostService.ClosePost(id, token, postApplyId);
             return Ok("Close post successfully");
         }
     }
