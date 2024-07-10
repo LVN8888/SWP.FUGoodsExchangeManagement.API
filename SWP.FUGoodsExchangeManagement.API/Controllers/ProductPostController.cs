@@ -29,8 +29,13 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             var paymentId = await _productPostService.CreateWaitingProductPost(requestModel, token);
 
             var paymentUrl = await _paymentService.GetPaymentUrl(HttpContext, paymentId, requestModel.RedirectUrl);
+            var response = new ProductPostPaymentModel
+            {
+                paymentId = paymentId,
+                paymentUrl = paymentUrl
+            };
 
-            return Ok(paymentUrl);
+            return Ok(response);
         }
 
         [HttpGet]
@@ -88,15 +93,6 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         }
 
         [HttpPut]
-        [Route("close/{id}")]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> CloseProductPost(string id)
-        {
-            await _productPostService.CloseProductPost(id);
-            return Ok("Close product post successfully");
-        }
-
-        [HttpPut]
         [Route("extend/{id}")]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> ExtendProductPost(string id, [FromBody] string postModeId)
@@ -113,6 +109,16 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         {
             await _productPostService.ApprovePost(status, id);
             return Ok("Approve post successfully");
+        }
+
+        [HttpPut]
+        [Route("close/{id}")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> CloseProductPost(string id)
+        {
+            string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
+            await _productPostService.ClosePost(id, token);
+            return Ok("Close post successfully");
         }
     }
 }
