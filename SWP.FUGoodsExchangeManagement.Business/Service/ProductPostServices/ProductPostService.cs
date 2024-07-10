@@ -302,14 +302,27 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
             await _unitOfWork.SaveChangeAsync();
         }
 
-        public async Task CloseProductPost(string id)
+        public async Task ClosePost(string id, string token)
         {
-            var chosenPost = await _unitOfWork.ProductPostRepository.GetSingle(p => p.Id.Equals(id));
-            if (chosenPost == null)
+            var chosenPost = await _unitOfWork.ProductPostRepository.GetSingle(a => a.Id.Equals(id));
+            var userId = _authenticationService.decodeToken(token, "userId");
+
+            if (chosenPost != null)
             {
-                throw new CustomException("The chosen post is not existed");
+                if (!chosenPost.Status.Equals(ProductPostStatus.Pending.ToString()))
+                {
+                    throw new CustomException("This post is not in pending status");
+                }
+
+                if (!chosenPost.CreatedBy.Equals(userId))
+                {
+                    throw new CustomException("This post is not created by you, so you cant close it");
+                }
+
+                chosenPost.Status = ProductPostStatus.Closed.ToString();
             }
-            chosenPost.Status = ProductPostStatus.Closed.ToString();
+            else throw new CustomException("There is no existed post with chosen Id");
+
             _unitOfWork.ProductPostRepository.Update(chosenPost);
             await _unitOfWork.SaveChangeAsync();
         }
