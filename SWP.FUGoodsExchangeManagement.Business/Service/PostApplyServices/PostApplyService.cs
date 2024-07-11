@@ -47,6 +47,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.PostApplyServices
                 Message = mess,
                 ProductPostId = postId,
                 BuyerId = userId,
+                Status = PostApplyStatus.Pending.ToString(),
             };
             chosenPost.Status = ProductPostStatus.Pending.ToString();
 
@@ -60,6 +61,10 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.PostApplyServices
             var chosenApply = await _unitOfWork.PostApplyRepository.GetSingle(p => p.Id == id);
             if (chosenApply != null)
             {
+                if (chosenApply.Status.Equals(PostApplyStatus.Success.ToString()))
+                {
+                    throw new CustomException("The product in this post is already bought by you. Cant delete post apply!");
+                }
                 await _unitOfWork.PostApplyRepository.Delete(chosenApply);
                 await _unitOfWork.SaveChangeAsync();
             }
@@ -86,7 +91,38 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.PostApplyServices
         public async Task<List<ProductPostResponseModel>> GetOwnApplyPost(string token, int? pageIndex, int ItemPerPage)
         {
             var userId = _authenticationService.decodeToken(token, "userId");
-            var ownList = await _unitOfWork.PostApplyRepository.Get(p => p.BuyerId.Equals(userId));
+            var ownList = await _unitOfWork.PostApplyRepository.Get(p => p.BuyerId.Equals(userId) && p.Status.Equals(PostApplyStatus.Pending.ToString()));
+            var buyingPostListId = ownList.Select(o => o.ProductPostId).ToList();
+            var allBuyingPost = await _unitOfWork.ProductPostRepository.Get(p => buyingPostListId.Contains(p.Id), null, includeProperties: "Category,PostMode,Campus,CreatedByNavigation", pageIndex ?? 1, ItemPerPage);
+            var waitingPostListId = allBuyingPost.Select(a => a.Id).ToList();
+            var allImages = await _unitOfWork.ProductImagesRepository.Get(i => waitingPostListId.Contains(i.ProductPostId));
+
+            var responseList = allBuyingPost.Select(a => new ProductPostResponseModel
+            {
+                Id = a.Id,
+                Title = a.Title,
+                Description = a.Description,
+                Price = a.Price,
+                CreatedBy = new PostAuthor
+                {
+                    FullName = a.CreatedByNavigation.Fullname,
+                    Email = a.CreatedByNavigation.Email,
+                    PhoneNumber = a.CreatedByNavigation.PhoneNumber
+                },
+                Category = a.Category.Name,
+                Campus = a.Campus.Name,
+                CreatedDate = a.CreatedDate,
+                ExpiredDate = a.ExpiredDate ?? null,
+                PostMode = a.PostMode.Type,
+                ImageUrls = allImages.Where(ai => ai.ProductPostId.Equals(a.Id)).Select(ai => ai.Url).ToList(),
+            }).ToList();
+            return responseList;
+        }
+        
+        public async Task<List<ProductPostResponseModel>> GetOwnBuyedApplyPost(string token, int? pageIndex, int ItemPerPage)
+        {
+            var userId = _authenticationService.decodeToken(token, "userId");
+            var ownList = await _unitOfWork.PostApplyRepository.Get(p => p.BuyerId.Equals(userId) && p.Status.Equals(PostApplyStatus.Success.ToString()));
             var buyingPostListId = ownList.Select(o => o.ProductPostId).ToList();
             var allBuyingPost = await _unitOfWork.ProductPostRepository.Get(p => buyingPostListId.Contains(p.Id), null, includeProperties: "Category,PostMode,Campus,CreatedByNavigation", pageIndex ?? 1, ItemPerPage);
             var waitingPostListId = allBuyingPost.Select(a => a.Id).ToList();

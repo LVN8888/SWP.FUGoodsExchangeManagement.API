@@ -34,6 +34,16 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             var response = await _postApplyService.GetOwnApplyPost(token, pageIndex, 8);
             return Ok(response);
         }
+        
+        [HttpGet]
+        [Route("buyed/me")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> ViewOwnBuyedPost(int? pageIndex)
+        {
+            var token = Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var response = await _postApplyService.GetOwnBuyedApplyPost(token, pageIndex, 8);
+            return Ok(response);
+        }
 
         [HttpPost]
         [Authorize(Roles = "User")]

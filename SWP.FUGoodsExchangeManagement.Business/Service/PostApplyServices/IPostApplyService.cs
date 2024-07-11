@@ -14,5 +14,6 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.PostApplyServices
         Task DeleteApplyPost(string id);
         Task<List<PostApplyResponseModel>> GetApplyOfPost(string postId, int? pageIndex);
         Task<List<ProductPostResponseModel>> GetOwnApplyPost(string token, int? pageIndex, int ItemPerPage);
+        Task<List<ProductPostResponseModel>> GetOwnBuyedApplyPost(string token, int? pageIndex, int ItemPerPage);
     }
 }

@@ -212,6 +212,9 @@ public partial class FugoodsExchangeManagementContext : DbContext
                 .HasMaxLength(36)
                 .IsUnicode(false)
                 .IsFixedLength();
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.Buyer).WithMany(p => p.PostApplies)
                 .HasForeignKey(d => d.BuyerId)

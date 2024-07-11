@@ -13,6 +13,8 @@ public partial class PostApply
 
     public string BuyerId { get; set; } = null!;
 
+    public string Status { get; set; } = null!;
+
     public virtual User Buyer { get; set; } = null!;
 
     public virtual ProductPost ProductPost { get; set; } = null!;
