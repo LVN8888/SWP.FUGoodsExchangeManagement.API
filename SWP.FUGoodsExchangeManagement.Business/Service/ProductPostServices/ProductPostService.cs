@@ -322,7 +322,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
                 chosenPost.Status = ProductPostStatus.Closed.ToString();
             }
             else throw new CustomException("There is no existed post with chosen Id");
-            var deletePostApplyList = await _unitOfWork.PostApplyRepository.Get(p => !p.Id.Equals(postApplyId));
+            var deletePostApplyList = await _unitOfWork.PostApplyRepository.Get(p => !p.Id.Equals(postApplyId) && p.ProductPostId.Equals(id));
 
             await _unitOfWork.PostApplyRepository.DeleteRange(deletePostApplyList.ToList());
             _unitOfWork.ProductPostRepository.Update(chosenPost);
