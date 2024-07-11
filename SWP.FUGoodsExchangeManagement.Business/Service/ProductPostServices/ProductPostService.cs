@@ -323,9 +323,13 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
             }
             else throw new CustomException("There is no existed post with chosen Id");
             var deletePostApplyList = await _unitOfWork.PostApplyRepository.Get(p => !p.Id.Equals(postApplyId) && p.ProductPostId.Equals(id));
+            var chosenPostApply = await _unitOfWork.PostApplyRepository.GetSingle(p =>  p.Id.Equals(postApplyId));
+            chosenPostApply.Status = PostApplyStatus.Success.ToString();
 
             await _unitOfWork.PostApplyRepository.DeleteRange(deletePostApplyList.ToList());
             _unitOfWork.ProductPostRepository.Update(chosenPost);
+            _unitOfWork.PostApplyRepository.Update(chosenPostApply);
+
             await _unitOfWork.SaveChangeAsync();
         }
 
