@@ -14,6 +14,8 @@ using SWP.FUGoodsExchangeManagement.Repository.DTOs.CampusDTOs.ResponseModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.CategoryDTOs.ResponseModel;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.ProductPostDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.CategoryDTOs.RequestModel;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.PaymentDTOs.Response;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.PostModeDTOs;
 
 namespace SWP.FUGoodsExchangeManagement.Repository.Mappers
 {
@@ -38,6 +40,9 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Mappers
             CreateMap<ProductPostUpdateRequestModel, ProductPost>();
             CreateMap<ProductPostCreateRequestModel, ProductPost>();
 
+            CreateMap<PostMode, PostModeListModel>();
+
+            CreateMap<Payment, PaymentResponseModel>();
         }
     }
 }

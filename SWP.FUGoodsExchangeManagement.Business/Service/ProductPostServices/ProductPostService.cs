@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
 using SWP.FUGoodsExchangeManagement.Business.Utils;
 using SWP.FUGoodsExchangeManagement.Business.VnPayService;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.PaymentDTOs.Response;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.ProductPostDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.ProductPostDTOs.ResponseModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.VnPayDTOs;
@@ -246,7 +247,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
             await _unitOfWork.SaveChangeAsync();
         }
 
-        public async Task ExtendExpiredDate(string id, string postModeId, string token)
+        public async Task<string> ExtendExpiredDate(string id, string postModeId, string token)
         {
             var userId = _authenticationService.decodeToken(token, "userId");
             var chosenPost = await _unitOfWork.ProductPostRepository.GetSingle(p => p.Id.Equals(id));
@@ -273,6 +274,8 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
             };
             await _unitOfWork.PaymentRepository.Insert(newPayment);
             await _unitOfWork.SaveChangeAsync();
+
+            return newPayment.Id;
         }
 
         public async Task ApprovePost(string status, string id)
@@ -452,6 +455,18 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
 
             _unitOfWork.ProductPostRepository.Update(chosenPost);
             await _unitOfWork.SaveChangeAsync();
+        }
+
+        public async Task<List<PaymentResponseModel>> GetPostPaymentRecords(int? pageIndex, string postId)
+        {
+            var list = await _unitOfWork.PaymentRepository.Get(filter: p => p.ProductPostId.Equals(postId),
+                                                                   orderBy: p => p.OrderByDescending(p => p.PaymentDate),
+                                                                   pageIndex: pageIndex ?? 1,
+                                                                   pageSize: ItemPerPage,
+                                                                   includeProperties: "PostMode"
+                                                                   );
+            var paymentRecords = _mapper.Map<List<PaymentResponseModel>>(list);
+            return paymentRecords;
         }
     }
 }

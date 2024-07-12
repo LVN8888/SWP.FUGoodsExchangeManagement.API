@@ -40,6 +40,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.PaymentServices
             }
 
             currentPayment.Status = model.Status;
+            currentPayment.TransactionId = model.TransactionId;
 
             _unitOfWork.PaymentRepository.Update(currentPayment);
 
@@ -65,11 +66,6 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.PaymentServices
             if (currentPayment.Status.Equals(nameof(PaymentStatus.Success)))
             {
                 throw new CustomException("Payment has already been paid!");
-            }
-
-            if (!currentPayment.ProductPost.Status.Equals(nameof(ProductPostStatus.Unpaid)))
-            {
-                throw new CustomException("The post of this payment does not in unpaid status");
             }
 
             VnPaymentRequestModel vnpay = new VnPaymentRequestModel

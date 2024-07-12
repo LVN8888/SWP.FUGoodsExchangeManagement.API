@@ -95,11 +95,19 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         [HttpPut]
         [Route("extend/{id}")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> ExtendProductPost(string id, [FromBody] string postModeId)
+        public async Task<IActionResult> ExtendProductPost(string id, [FromBody] ExtendProductPostRequestModel requestModel)
         {
             var token = Request.Headers["Authorization"].ToString().Split(" ")[1];
-            await _productPostService.ExtendExpiredDate(id, postModeId, token);
-            return Ok("Update successfully");
+            var paymentId = await _productPostService.ExtendExpiredDate(id, requestModel.PostModeId, token);
+
+            var paymentUrl = await _paymentService.GetPaymentUrl(HttpContext, paymentId, requestModel.RedirectUrl);
+            var response = new ProductPostPaymentModel
+            {
+                paymentId = paymentId,
+                paymentUrl = paymentUrl
+            };
+
+            return Ok(response);
         }
 
         [HttpPut]
@@ -119,6 +127,15 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
             await _productPostService.ClosePost(id, token, postApplyId);
             return Ok("Close post successfully");
+        }
+        
+        [HttpGet]
+        [Route("{id}/payment-records")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetPostPaymentRecords(string id, int? pageIndex)
+        {
+            var result = await _productPostService.GetPostPaymentRecords(pageIndex, id);
+            return Ok(result);
         }
     }
 }

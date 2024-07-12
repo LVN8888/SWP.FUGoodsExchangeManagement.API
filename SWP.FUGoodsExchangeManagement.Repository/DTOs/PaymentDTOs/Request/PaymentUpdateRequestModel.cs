@@ -11,5 +11,7 @@ namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.PaymentDTOs.Request
         public string Id { get; set; } = null!;
 
         public string Status { get; set; } = null!;
+
+        public string TransactionId { get; set; } = null!;
     }
 }
