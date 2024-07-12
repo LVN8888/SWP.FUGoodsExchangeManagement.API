@@ -247,7 +247,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
             await _unitOfWork.SaveChangeAsync();
         }
 
-        public async Task ExtendExpiredDate(string id, string postModeId, string token)
+        public async Task<string> ExtendExpiredDate(string id, string postModeId, string token)
         {
             var userId = _authenticationService.decodeToken(token, "userId");
             var chosenPost = await _unitOfWork.ProductPostRepository.GetSingle(p => p.Id.Equals(id));
@@ -274,6 +274,8 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
             };
             await _unitOfWork.PaymentRepository.Insert(newPayment);
             await _unitOfWork.SaveChangeAsync();
+
+            return newPayment.Id;
         }
 
         public async Task ApprovePost(string status, string id)

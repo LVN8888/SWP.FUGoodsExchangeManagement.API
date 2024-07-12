@@ -68,11 +68,6 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.PaymentServices
                 throw new CustomException("Payment has already been paid!");
             }
 
-            if (!currentPayment.ProductPost.Status.Equals(nameof(ProductPostStatus.Unpaid)))
-            {
-                throw new CustomException("The post of this payment does not in unpaid status");
-            }
-
             VnPaymentRequestModel vnpay = new VnPaymentRequestModel
             {
                 OrderId = currentPayment.ProductPost.Id,

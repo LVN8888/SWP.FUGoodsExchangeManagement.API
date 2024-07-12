@@ -18,7 +18,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
         Task<List<ProductPostResponseModel>> ViewOwnPostExceptMine(int? pageIndex, PostSearchModel searchModel, string token);
         Task<ProductPostResponseModel> ViewDetailsOfPost(string id);
         Task UpdateProductPost(string id, ProductPostUpdateRequestModel requestModel);
-        Task ExtendExpiredDate(string id, string postModeId, string token);
+        Task<string> ExtendExpiredDate(string id, string postModeId, string token);
         Task ExtendExpiredDateAfterPaymentSuccess(string id, string postModeId);
         Task ClosePost(string id, string token, string postApplyId);
         Task<List<PaymentResponseModel>> GetPostPaymentRecords(int? pageIndex, string postId);

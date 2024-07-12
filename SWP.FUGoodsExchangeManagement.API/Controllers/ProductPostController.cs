@@ -95,11 +95,19 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         [HttpPut]
         [Route("extend/{id}")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> ExtendProductPost(string id, [FromBody] string postModeId)
+        public async Task<IActionResult> ExtendProductPost(string id, [FromBody] ExtendProductPostRequestModel requestModel)
         {
             var token = Request.Headers["Authorization"].ToString().Split(" ")[1];
-            await _productPostService.ExtendExpiredDate(id, postModeId, token);
-            return Ok("Update successfully");
+            var paymentId = await _productPostService.ExtendExpiredDate(id, requestModel.PostModeId, token);
+
+            var paymentUrl = await _paymentService.GetPaymentUrl(HttpContext, paymentId, requestModel.RedirectUrl);
+            var response = new ProductPostPaymentModel
+            {
+                paymentId = paymentId,
+                paymentUrl = paymentUrl
+            };
+
+            return Ok(response);
         }
 
         [HttpPut]
