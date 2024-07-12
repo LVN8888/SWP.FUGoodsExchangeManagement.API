@@ -9,6 +9,8 @@ namespace SWP.FUGoodsExchangeManagement.Repository.DTOs.PostModeDTOs
 {
     public class PostModeListModel
     {
+        public string Id { get; set; } = null!;
+
         public string Type { get; set; } = null!;
 
         public string Duration { get; set; } = null!;
