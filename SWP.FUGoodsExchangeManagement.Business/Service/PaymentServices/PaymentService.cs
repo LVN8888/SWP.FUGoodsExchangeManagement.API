@@ -40,6 +40,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.PaymentServices
             }
 
             currentPayment.Status = model.Status;
+            currentPayment.TransactionId = model.TransactionId;
 
             _unitOfWork.PaymentRepository.Update(currentPayment);
 
