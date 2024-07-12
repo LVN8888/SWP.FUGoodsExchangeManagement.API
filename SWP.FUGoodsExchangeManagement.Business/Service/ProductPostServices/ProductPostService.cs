@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using SWP.FUGoodsExchangeManagement.Business.Service.AuthenticationServices;
 using SWP.FUGoodsExchangeManagement.Business.Utils;
 using SWP.FUGoodsExchangeManagement.Business.VnPayService;
+using SWP.FUGoodsExchangeManagement.Repository.DTOs.PaymentDTOs.Response;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.ProductPostDTOs.RequestModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.ProductPostDTOs.ResponseModels;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.VnPayDTOs;
@@ -452,6 +453,18 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ProductPostServices
 
             _unitOfWork.ProductPostRepository.Update(chosenPost);
             await _unitOfWork.SaveChangeAsync();
+        }
+
+        public async Task<List<PaymentResponseModel>> GetPostPaymentRecords(int? pageIndex, string postId)
+        {
+            var list = await _unitOfWork.PaymentRepository.Get(filter: p => p.ProductPostId.Equals(postId),
+                                                                   orderBy: p => p.OrderByDescending(p => p.PaymentDate),
+                                                                   pageIndex: pageIndex ?? 1,
+                                                                   pageSize: ItemPerPage,
+                                                                   includeProperties: "PostMode"
+                                                                   );
+            var paymentRecords = _mapper.Map<List<PaymentResponseModel>>(list);
+            return paymentRecords;
         }
     }
 }

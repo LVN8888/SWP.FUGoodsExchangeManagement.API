@@ -120,5 +120,14 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
             await _productPostService.ClosePost(id, token, postApplyId);
             return Ok("Close post successfully");
         }
+        
+        [HttpGet]
+        [Route("{id}/payment-records")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetPostPaymentRecords(string id, int? pageIndex)
+        {
+            var result = await _productPostService.GetPostPaymentRecords(pageIndex, id);
+            return Ok(result);
+        }
     }
 }
