@@ -42,6 +42,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.PostModeServices
             {
                 postModeList.Add(new PostModeListModel
                 {
+                    Id = model.Id,
                     Type = model.Type,
                     Duration = model.Duration,
                     Price = model.Price
@@ -58,6 +59,7 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.PostModeServices
             {
                 postModeList.Add(new PostModeListModel
                 {
+                    Id = model.Id,
                     Type = model.Type,
                     Duration = model.Duration,
                     Price = model.Price
