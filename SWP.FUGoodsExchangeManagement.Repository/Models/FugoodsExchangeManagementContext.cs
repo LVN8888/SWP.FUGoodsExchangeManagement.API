@@ -177,6 +177,9 @@ public partial class FugoodsExchangeManagementContext : DbContext
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.TransactionId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.PostMode).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.PostModeId)

@@ -7,6 +7,8 @@ public partial class Payment
 {
     public string Id { get; set; } = null!;
 
+    public string? TransactionId { get; set; }
+
     public DateTime PaymentDate { get; set; }
 
     public string Price { get; set; } = null!;
