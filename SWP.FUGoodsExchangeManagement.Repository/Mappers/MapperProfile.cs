@@ -35,7 +35,8 @@ namespace SWP.FUGoodsExchangeManagement.Repository.Mappers
             CreateMap<DeleteCampusDTO, Campus>();
 
             CreateMap<Category, CategoryResponseModel>();
-            CreateMap<CategoryCreateRequestModel, Category>();
+            CreateMap<CategoryCreateRequestModel, Category>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid().ToString()));
 
             CreateMap<ProductPostUpdateRequestModel, ProductPost>();
             CreateMap<ProductPostCreateRequestModel, ProductPost>();
