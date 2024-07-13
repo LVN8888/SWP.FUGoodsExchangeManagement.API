@@ -36,7 +36,8 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.OTPServices
                 throw new CustomException("There is no account with this email");
             }
 
-            var latestOTP = await _unitOfWork.OTPRepository.GetSingle(o => o.UserId == currentUser.Id, o => o.OrderByDescending(o => o.CreatedAt));
+            var latestOTPList = await _unitOfWork.OTPRepository.Get(o => o.UserId == currentUser.Id, o => o.OrderByDescending(o => o.CreatedAt));
+            var latestOTP = latestOTPList.FirstOrDefault();
 
             if (latestOTP != null)
             {
