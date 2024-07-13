@@ -63,11 +63,8 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.OTPServices
             };
 
             await _unitOfWork.OTPRepository.Insert(newOTPCode);
-            var result = await _unitOfWork.SaveChangeAsync();
-            if (result < 1)
-            {
-                throw new CustomException("Internal Server Error");
-            }
+            await _unitOfWork.SaveChangeAsync();
+           
         }
 
         public async Task VerifyOTP(OTPVerifyRequestModel model)
@@ -98,12 +95,9 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.OTPServices
                 }
 
                 _unitOfWork.OTPRepository.Update(latestOTP);
-                var result = await _unitOfWork.SaveChangeAsync();
+                await _unitOfWork.SaveChangeAsync();
 
-                if (result < 1)
-                {
-                    throw new CustomException("Internal Server Error");
-                }
+                
             }
         }
     }
