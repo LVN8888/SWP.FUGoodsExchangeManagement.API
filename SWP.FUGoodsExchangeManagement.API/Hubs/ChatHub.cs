@@ -2,6 +2,7 @@
 using SWP.FUGoodsExchangeManagement.Business.Service.ChatServices;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace SWP.FUGoodsExchangeManagement.API.Hubs
 {
@@ -16,16 +17,16 @@ namespace SWP.FUGoodsExchangeManagement.API.Hubs
             _logger = logger;
         }
 
-        public async Task SendMessage(string chatId, string message, string buyerId)
+        public async Task SendMessage(string chatId, string message, bool isSeller)
         {
             try
             {
-                if (string.IsNullOrEmpty(chatId) || string.IsNullOrEmpty(message) || string.IsNullOrEmpty(buyerId))
+                if (string.IsNullOrEmpty(chatId) || string.IsNullOrEmpty(message))
                 {
                     throw new HubException("Invalid parameters.");
                 }
-                await _chatService.AddChatDetailAsync(chatId, message, buyerId);
-                await Clients.Group(chatId).SendAsync("ReceiveMessage", message);
+                await _chatService.AddChatDetailAsync(chatId, message, isSeller);
+                await Clients.Group(chatId).SendAsync("ReceiveMessage", message, isSeller);
             }
             catch (Exception ex)
             {
