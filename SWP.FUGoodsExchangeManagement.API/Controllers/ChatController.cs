@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SWP.FUGoodsExchangeManagement.Business.Service.ChatServices;
 using SWP.FUGoodsExchangeManagement.Repository.DTOs.ChatDTOs;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SWP.FUGoodsExchangeManagement.API.Controllers
@@ -25,9 +24,9 @@ namespace SWP.FUGoodsExchangeManagement.API.Controllers
         }
 
         [HttpPost("sendmessage")]
-        public async Task<IActionResult> SendMessage(string chatId, string message, string buyerId)
+        public async Task<IActionResult> SendMessage(string chatId, string message, bool isSeller)
         {
-            await _chatService.AddChatDetailAsync(chatId, message, buyerId);
+            await _chatService.AddChatDetailAsync(chatId, message, isSeller);
             return Ok();
         }
 

@@ -50,14 +50,14 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ChatServices
             };
         }
 
-        public async Task AddChatDetailAsync(string chatId, string message, string buyerId)
+        public async Task AddChatDetailAsync(string chatId, string message, bool isSeller)
         {
             var chatDetail = new ChatDetail
             {
                 Id = Guid.NewGuid().ToString(),
                 Message = message,
                 Time = DateTime.UtcNow,
-                Flag = false,
+                Flag = isSeller,
                 ChatId = chatId
             };
 
@@ -79,14 +79,16 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ChatServices
                 Id = chat.Id,
                 ProductPostId = chat.ProductPostId,
                 BuyerId = chat.BuyerId,
-                ChatDetails = chat.ChatDetails.Select(cd => new ChatDetailRequestModel
-                {
-                    Id = cd.Id,
-                    Message = cd.Message,
-                    Time = cd.Time,
-                    Flag = cd.Flag,
-                    ChatId = cd.ChatId
-                }).ToList()
+                ChatDetails = chat.ChatDetails
+                                .OrderByDescending(cd => cd.Time)
+                                .Select(cd => new ChatDetailRequestModel
+                                {
+                                    Id = cd.Id,
+                                    Message = cd.Message,
+                                    Time = cd.Time,
+                                    Flag = cd.Flag,
+                                    ChatId = cd.ChatId
+                                }).ToList()
             };
         }
 
@@ -98,14 +100,16 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ChatServices
                 Id = chat.Id,
                 ProductPostId = chat.ProductPostId,
                 BuyerId = chat.BuyerId,
-                ChatDetails = chat.ChatDetails.Select(cd => new ChatDetailRequestModel
-                {
-                    Id = cd.Id,
-                    Message = cd.Message,
-                    Time = cd.Time,
-                    Flag = cd.Flag,
-                    ChatId = cd.ChatId
-                }).ToList()
+                ChatDetails = chat.ChatDetails
+                                .OrderByDescending(cd => cd.Time)
+                                .Select(cd => new ChatDetailRequestModel
+                                {
+                                    Id = cd.Id,
+                                    Message = cd.Message,
+                                    Time = cd.Time,
+                                    Flag = cd.Flag,
+                                    ChatId = cd.ChatId
+                                }).ToList()
             }).ToList();
         }
 
@@ -114,27 +118,6 @@ namespace SWP.FUGoodsExchangeManagement.Business.Service.ChatServices
             var chat = await _chatRepository.GetById(chatId);
             if (chat == null) return;
             _chatRepository.Update(chat);
-            var result = await _unitOfWork.SaveChangeAsync();
-            if (result < 1)
-            {
-                throw new Exception("Internal Server Error");
-            }
-        }
-
-        public async Task FlagMessageAsync(string messageId)
-        {
-            var chatDetail = await _chatDetailRepository.GetById(messageId);
-            if (chatDetail == null) return;
-
-            chatDetail.Flag = true;
-            _chatDetailRepository.Update(chatDetail);
-
-            var chat = await _chatRepository.GetById(chatDetail.ChatId);
-            if (chat != null)
-            {
-                _chatRepository.Update(chat);
-            }
-
             var result = await _unitOfWork.SaveChangeAsync();
             if (result < 1)
             {
